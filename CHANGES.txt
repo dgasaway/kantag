@@ -1,0 +1,2 @@
+2013-03-34, kantag v1.0.0
+  * Initial release.
