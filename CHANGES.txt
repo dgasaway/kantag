@@ -1,2 +1,8 @@
-2013-03-34, kantag v1.0.0
+2013-03-24, kantag v1.0.0
   * Initial release.
+
+2013-03-25, kantag v1.0.1
+  * Change shebangs to '/usr/bin/env python' since cygwin does not have a python2
+    symlink.
+  * Remove module imports from __init__.py so that tools showkan can work without
+    python-musicbrainz2.
