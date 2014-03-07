@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # applykan.py - kantag tool for writing text metadata to audio files.
 # Copyright (C) 2013 David Gasaway
