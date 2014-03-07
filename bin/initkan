@@ -54,7 +54,8 @@ _track_tags = frozenset([
 	])
 _musicbrainz_tags = [
 	u'musicbrainz_albumid', u'musicbrainz_albumartistid', u'musicbrainz_artistid',
-	u'musicbrainz_trackid', u'musicbrainz_workid'
+	u'musicbrainz_discid', u'musicbrainz_releasegroupid', u'musicbrainz_trackid',
+	u'musicbrainz_workid'
 	]
 _replaygain_tags = [
 	u'replaygain_album_peak', u'replaygain_album_gain', u'replaygain_track_peak', 
