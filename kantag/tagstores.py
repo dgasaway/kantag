@@ -223,7 +223,7 @@ class _TagStoreBuilder(object):
 		entity.is_various = \
 			not entity.is_single_artist and \
 			(u'AlbumArtist' not in common_values or \
-			u'Various Aritsts' in common_values[u'AlbumArtist'] or \
+			u'Various Artists' in common_values[u'AlbumArtist'] or \
 			u'Various' in common_values[u'AlbumArtist'] or \
 			various in common_values[u'AlbumArtist'])
 		if entity.is_various and not u'AlbumArtist' in common_values:
