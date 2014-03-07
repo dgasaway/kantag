@@ -223,8 +223,8 @@ def add_dates(builder, entity, require_date, parent=None):
 	else:
 		builder.add_values(entity, 'Date')
 	# Don't write OriginalDate if it == Date
-	if 'Date' in entity.tags and 'OriginalDate' in entity.tags:
-		if entity.tags['OriginalDate'][0] != entity.tags['Date'][0]:
+	if 'OriginalDate' in entity.tags:
+		if 'Date' not in entity.tags or entity.tags['OriginalDate'][0] != entity.tags['Date'][0]:
 			builder.add_values(entity, 'OriginalDate')
 
 # --------------------------------------------------------------------------------------------------
@@ -462,6 +462,7 @@ def add_structured(builder, rel, args):
 			builder.add_values(track, 'CoverNumber', disc)
 			builder.add_values(track, 'Genre', disc)
 			builder.add_values(track, 'Comment', disc)
+			add_dates(builder, track, False)
 			
 			# Unknown/unsupported stuff.
 			if args.output_unsupported:
