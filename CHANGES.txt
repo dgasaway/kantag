@@ -13,6 +13,7 @@
     musicbrainz_releasegroupid, and musicbrainz_discid tags.
   * Change shebangs back to '/usr/bin/env python2' for systems (e.g., funtoo)
     that default to python3.
-  * Output OriginalDate at track level if it cannot be rolled to disc or release
-    level (e.g., a re-release that has multiple albums on a single disc).
-  * Fix output of OriginalDate if there is no Date at the same level.
+  * initkan: Output OriginalDate at track level if it cannot be rolled to disc or
+    release level (e.g., a re-release that has multiple albums on a single disc).
+  * initkan: Fix output of OriginalDate if there is no Date at the same level.
+  * initkan: Fix double output of Date tag with multi-disc releases.

@@ -410,7 +410,7 @@ def add_structured(builder, rel, args):
 			builder.add_values(disc, 'DiscSubtitle')
 			builder.add_values(disc, 'AlbumArtist')
 			builder.add_values(disc, 'AlbumArtistSort')
-			add_dates(builder, rel, False)
+			add_dates(builder, disc, False)
 			builder.add_values(disc, 'Genre')
 			builder.add_values(disc, 'Version')
 			builder.add_values(disc, 'Comment')
