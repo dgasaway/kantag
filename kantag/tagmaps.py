@@ -62,6 +62,7 @@ cannonical_tags = frozenset([
 	u'DJMixer',
 	u'Engineer',
 	u'Genre',
+	u'ISRC',
 	u'Label',
 	u'LabelId',
 	u'Language',

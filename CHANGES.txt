@@ -20,3 +20,4 @@
   * When reading non-MP3 files, map Remixer to Arranger.  This was already
     happening for MP3s, as well as for remixer relationships pulled from the
     MusicBrainz web service.
+  * Add ISRC to recognized tags; unsupported by initkan.
