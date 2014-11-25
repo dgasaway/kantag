@@ -26,7 +26,10 @@ def _map_tag(tag, warn):
 	"""
 	Get the cannonical name for a tag.
 	"""
-	l = [t for t in tagmaps.cannonical_tags if t.lower() == tag.lower()]
+	work = tag.lower()
+	if work in tagmaps.general_read_map:
+		work = tagmaps.general_read_map[work].lower()
+	l = [t for t in tagmaps.cannonical_tags if t.lower() == work]
 	if len(l) == 0:
 		if warn: 
 			print >> sys.stderr, 'warning: unrecognized tag: ' + tag

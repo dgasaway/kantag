@@ -151,7 +151,7 @@ id3_read_map = {
 	u'TRCK': u'TrackNumber',
 	u'TIT3': u'Version',
 	u'TXXX:VERSION': u'Version',
-    u'TXXX:version': u'Version',
+	u'TXXX:version': u'Version',
 	u'TXXX:WORK': u'Work',
 	u'TXXX:WRITER': u'Writer',
 	u'TXXX:WRITERSORT': u'WriterSort',
@@ -173,10 +173,16 @@ id3_read_map = {
 	u'TXXX:replaygain_track_gain': u'replaygain_track_gain'
 	}
 
+""" Map non-ID3 tags from, e.g., Picard to cannonical names. """
+# Note that the destination value should be something in cannonical_tags.
+general_read_map = {
+	u'remixer': u'Arranger'
+	}
+
 """ Map TIPL involvements to kantag name. """
 tipl_map = {
 	u'dj-mix': u'DJMixer',
-	u'mix': u'Mixer'#
+	u'mix': u'Mixer'
 	}
 
 """ Map kantag name to ID3 frame. """

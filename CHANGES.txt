@@ -17,3 +17,6 @@
     release level (e.g., a re-release that has multiple albums on a single disc).
   * initkan: Fix output of OriginalDate if there is no Date at the same level.
   * initkan: Fix double output of Date tag with multi-disc releases.
+  * When reading non-MP3 files, map Remixer to Arranger.  This was already
+    happening for MP3s, as well as for remixer relationships pulled from the
+    MusicBrainz web service.
