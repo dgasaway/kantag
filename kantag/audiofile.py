@@ -165,6 +165,8 @@ def _build_frame(tag, values):
 		return mutagen.id3.TIT3(encoding=3, text=values)
 	elif frame == 'TSOC':
 		return mutagen.id3.TSOC(encoding=3, text=values)
+	elif frame == 'TDOR':
+		return mutagen.id3.TDOR(encoding=3, text=values)
 	elif frame.startswith('TXXX:'):
 		desc = frame.partition(':')[2]
 		return mutagen.id3.TXXX(encoding=3, desc=desc, text=values)

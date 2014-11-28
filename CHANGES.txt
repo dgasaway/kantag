@@ -21,3 +21,4 @@
     happening for MP3s, as well as for remixer relationships pulled from the
     MusicBrainz web service.
   * Add ISRC to recognized tags; unsupported by initkan.
+  * Add support to ID3 TDOR frame.
