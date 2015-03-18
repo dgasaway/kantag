@@ -21,4 +21,6 @@
     happening for MP3s, as well as for remixer relationships pulled from the
     MusicBrainz web service.
   * Add ISRC to recognized tags; unsupported by initkan.
-  * Add support to ID3 TDOR frame.
+  * Add support for ID3 TDOR frame.
+  * Add support for additional tags supported by Picard 1.3.x, such as multi-
+    value AlbumArtists tags, musicbrainz_releasetrackid, and work title.
