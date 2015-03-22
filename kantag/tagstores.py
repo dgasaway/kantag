@@ -475,6 +475,10 @@ class ReleaseBuilder(_TagStoreBuilder):
 		tags.replace(u'AlbumArtist', self._options.various, u'Various Artists')
 		tags.replace(u'AlbumArtistSort', u'Various', u'Various Artists')
 		tags.replace(u'AlbumArtistSort', self._options.various, u'Various Artists')
+		tags.replace(u'AlbumArtists', u'Various', u'Various Artists')
+		tags.replace(u'AlbumArtists', self._options.various, u'Various Artists')
+		tags.replace(u'AlbumArtistsSort', u'Various', u'Various Artists')
+		tags.replace(u'AlbumArtistsSort', self._options.various, u'Various Artists')
 		
 		# Add artist relations from musicbrainz to the track tags.
 		if self._options.call_musicbrainz:
@@ -540,5 +544,7 @@ class ReleaseBuilder(_TagStoreBuilder):
 		# Set the final "Various Artists"/"Various" values.
 		release.replace_all(u'AlbumArtist', u'Various Artists', self._options.various)
 		release.replace_all(u'AlbumArtistSort', u'Various Artists', self._options.various)
+		release.replace_all(u'AlbumArtists', u'Various Artists', self._options.various)
+		release.replace_all(u'AlbumArtistsSort', u'Various Artists', self._options.various)
 		
 		return release
