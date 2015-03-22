@@ -85,6 +85,8 @@ cannonical_tags = frozenset([
 	u'ReleaseType',
 	u'Script',
 	u'Title',
+	u'TotalDiscs',
+	u'TotalTracks',
 	u'TrackNumber',
 	u'Version',
 	u'Work',
@@ -188,7 +190,9 @@ id3_read_map = {
 """ Map non-ID3 tags from, e.g., Picard to cannonical names. """
 # Note that the destination value should be something in cannonical_tags.
 general_read_map = {
-	u'remixer': u'Arranger'
+	u'remixer': u'Arranger',
+	u'disctotal': u'TotalDiscs',
+	u'tracktotal': u'TotalTracks'
 	}
 
 """ Map TIPL involvements to kantag name. """

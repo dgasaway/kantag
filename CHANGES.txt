@@ -24,3 +24,5 @@
   * Add support for ID3 TDOR frame.
   * Add support for additional tags supported by Picard 1.3.x, such as multi-
     value AlbumArtists tags, musicbrainz_releasetrackid, and work title.
+  * Add basic support for total tracks/total discs.  initkan will not write them
+    by default, but will read them without warning.
