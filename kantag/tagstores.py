@@ -291,7 +291,7 @@ class TrackBuilder(_TagStoreBuilder):
 			if u'DiscNumber' not in tags and 'disc' in parts and parts['disc'] != '':
 				tags[u'DiscNumber'] = [parts['disc']]
 			if u'TrackNumber' not in tags and 'track' in parts and parts['track'] != '':
-				tags[u'TrackNumber'] = [parts['track'].zill(2)]
+				tags[u'TrackNumber'] = [parts['track'].zfill(2)]
 			if u'Title' not in tags and 'title' in parts and parts['title'] !='':
 				tags[u'Title'] = [parts['title']]
 		else:

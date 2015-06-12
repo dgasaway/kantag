@@ -26,3 +26,4 @@
     value AlbumArtists tags, musicbrainz_releasetrackid, and work title.
   * Add basic support for total tracks/total discs.  initkan will not write them
     by default, but will read them without warning.
+  * Fix bug that caused an error in path inference function.
