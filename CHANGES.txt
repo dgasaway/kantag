@@ -27,3 +27,4 @@
   * Add basic support for total tracks/total discs.  initkan will not write them
     by default, but will read them without warning.
   * Fix bug that caused an error in path inference function.
+  * initkan: Fix crash if no musicbrainz ids are present.

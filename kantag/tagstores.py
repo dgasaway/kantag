@@ -393,30 +393,31 @@ class DiscBuilder(_TagStoreBuilder):
 		# level, you'll get nothing.
 		
 		tags = self.disc.tags
-		for mbid in tags[u'musicbrainz_albumid']:
-			# Call the web service.
-			release = musicbrainz.get_release_by_id(mbid)
-			self.disc.is_single_artist = release.isSingleArtistRelease()
+		if u'musicbrainz_albumid' in tags:
+			for mbid in tags[u'musicbrainz_albumid']:
+				# Call the web service.
+				release = musicbrainz.get_release_by_id(mbid)
+				self.disc.is_single_artist = release.isSingleArtistRelease()
 			
-			# Parse the album title in case it is a musicbrainz-style multi-disc title.
-			parsed = musicbrainz.parse_album_title(release.title)
-			if parsed.discnum is not None:
-				tags[u'Album'] = [parsed.title]
-				tags[u'DiscNumber'] = [parsed.discnum]
-			if parsed.subtitle is not None:
-				tags[u'DiscSubtitle'] = [parsed.subtitle]
+				# Parse the album title in case it is a musicbrainz-style multi-disc title.
+				parsed = musicbrainz.parse_album_title(release.title)
+				if parsed.discnum is not None:
+					tags[u'Album'] = [parsed.title]
+					tags[u'DiscNumber'] = [parsed.discnum]
+				if parsed.subtitle is not None:
+					tags[u'DiscSubtitle'] = [parsed.subtitle]
 			
-			# Get the date of the earliest release date (US preferred).
-			date = musicbrainz.get_earliest_release(release)
-			if date is not None:
-				if u'Date' not in tags:
-					tags[u'Date'] = [date]
-				elif date != tags[u'Date'][0] and u'OriginalDate' not in tags:
-					tags[u'OriginalDate'] = [date]
+				# Get the date of the earliest release date (US preferred).
+				date = musicbrainz.get_earliest_release(release)
+				if date is not None:
+					if u'Date' not in tags:
+						tags[u'Date'] = [date]
+					elif date != tags[u'Date'][0] and u'OriginalDate' not in tags:
+						tags[u'OriginalDate'] = [date]
 			
-			# Add the artist relations using sortnames.
-			for rel in musicbrainz.get_release_artist_relations(release):
-				self.apply_musicbrainz_relation(rel)
+				# Add the artist relations using sortnames.
+				for rel in musicbrainz.get_release_artist_relations(release):
+					self.apply_musicbrainz_relation(rel)
 
 # --------------------------------------------------------------------------------------------------
 class ReleaseBuilder(_TagStoreBuilder):
