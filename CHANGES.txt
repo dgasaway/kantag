@@ -28,3 +28,4 @@
     by default, but will read them without warning.
   * Fix bug that caused an error in path inference function.
   * initkan: Fix crash if no musicbrainz ids are present.
+  * Change tag inference to set title if the exsting title starts with "Track ".

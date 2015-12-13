@@ -292,7 +292,9 @@ class TrackBuilder(_TagStoreBuilder):
 				tags[u'DiscNumber'] = [parts['disc']]
 			if u'TrackNumber' not in tags and 'track' in parts and parts['track'] != '':
 				tags[u'TrackNumber'] = [parts['track'].zfill(2)]
-			if u'Title' not in tags and 'title' in parts and parts['title'] !='':
+			# Also want to see if the existing title is a generic value like "Track 5".
+			if (u'Title' not in tags or tags[u'Title'][0][0:6] == 'Track ') and \
+				'title' in parts and parts['title'] !='':
 				tags[u'Title'] = [parts['title']]
 		else:
 			if u'Title' not in tags:
