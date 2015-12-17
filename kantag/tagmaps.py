@@ -118,6 +118,8 @@ id3_read_map = {
 	u'TSO2': u'AlbumArtistSort',
 	u'TXXX:ALBUMARTISTS': u'AlbumArtists',
 	u'TXXX:ALBUMARTISTSSORT': u'AlbumArtistsSort',
+	u'TXXX:albumartists': u'AlbumArtists',
+	u'TXXX:albumartistssort': u'AlbumArtistsSort',
 	u'TXXX:AMAZON_ID': u'AmazonId',
 	u'TXXX:ARRANGER': u'Arranger',
 	u'TXXX:ARRANGERSORT': u'ArrangerSort',
