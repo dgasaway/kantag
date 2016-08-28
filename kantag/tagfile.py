@@ -368,6 +368,18 @@ class TagFileBuilder(object):
 				self.add_value(entity, key, value, parent)
 		else:
 			self.add_value(entity, key, '', parent)
+
+	# ----------------------------------------------------------------------------------------------
+	def add_values_as_req(self, entity, key, as_tag, parent=None):
+		"""
+		Add a TagLine built from a TagStore entity and its stored tag values for the key, but as an
+		alternate tag name; a line is added even if no tags are present for the key.
+		"""
+		if key in entity.tags:
+			for value in entity.tags[key]:
+				self.add_value(entity, as_tag, value, parent)
+		else:
+			self.add_value(entity, as_tag, '', parent)
 	
 	# ----------------------------------------------------------------------------------------------
 	def add_comment(self, comment):

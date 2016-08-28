@@ -304,7 +304,7 @@ def add_structured(builder, rel, args):
 		pass
 		
 	# Always want a multi-value album artist output, so prefer any proper AlbumArtists multi-value,
-	# but fall back on what we using for AlbumArtist.
+	# but fall back on what we used for AlbumArtist.
 	if 'AlbumArtists' in rel.tags:
 		builder.add_values(rel, 'AlbumArtists')
 		builder.add_values(rel, 'AlbumArtistsSort')
