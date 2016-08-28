@@ -313,12 +313,12 @@ def _write_m4a(path, tagset):
 	for name, key in tagmaps.mp4_map.items():
 		mutagen.easymp4.EasyMP4Tags.RegisterFreeformKey(key, name)
 
-        afile = mutagen.easymp4.EasyMP4(path)
-	afile.delete()  # Needed to remove tags not mapped by EasyMP4.
-        afile.clear()
-        for tag, values in tagset.iteritems():
-                afile[tag.lower()] = values
-        afile.save()
+		afile = mutagen.easymp4.EasyMP4(path)
+		afile.delete()  # Needed to remove tags not mapped by EasyMP4.
+		afile.clear()
+		for tag, values in tagset.iteritems():
+			afile[tag.lower()] = values
+		afile.save()
 
 # --------------------------------------------------------------------------------------------------
 def write(path, tagset):
