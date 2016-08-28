@@ -19,7 +19,6 @@ import mutagen.oggvorbis
 import mutagen.flac
 import mutagen.easymp4
 import tagmaps, exceptions
-import pprint
 from util import TagValue
 from tagset import TagSet
 
@@ -199,14 +198,7 @@ def _read_flac(path, warn):
 	Read the existing tags from a flac file, and return a list of TagValue named tuples.
 	"""
 	afile = mutagen.flac.FLAC(path)
-	#print pprint.PrettyPrinter(indent=2).pformat(afile.tags)
-	#print [pprint.PrettyPrinter(indent=2).pformat(v) for v in afile.tags]
-	
-	result = [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
-	print pprint.PrettyPrinter(indent=2).pformat(result)
-	return result
-
-	#return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
+	return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
 
 # --------------------------------------------------------------------------------------------------
 def _read_mp3(path, warn):
@@ -313,12 +305,12 @@ def _write_m4a(path, tagset):
 	for name, key in tagmaps.mp4_map.items():
 		mutagen.easymp4.EasyMP4Tags.RegisterFreeformKey(key, name)
 
-		afile = mutagen.easymp4.EasyMP4(path)
-		afile.delete()  # Needed to remove tags not mapped by EasyMP4.
-		afile.clear()
-		for tag, values in tagset.iteritems():
-			afile[tag.lower()] = values
-		afile.save()
+	afile = mutagen.easymp4.EasyMP4(path)
+	afile.delete()  # Needed to remove tags not mapped by EasyMP4.
+	afile.clear()
+	for tag, values in tagset.iteritems():
+		afile[tag.lower()] = values
+	afile.save()
 
 # --------------------------------------------------------------------------------------------------
 def write(path, tagset):
