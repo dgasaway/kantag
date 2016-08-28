@@ -37,8 +37,8 @@ Set of tag names that will generate a warning if any given file does not contain
 by that name.
 """
 _minimal_tags = frozenset([
-	u'AlbumArtist', u'AlbumArtistSort', u'Artist', u'ArtistSort', u'Date', u'LabelId', u'Title', 
-	u'Performer', u'PerformerSort', u'TrackNumber', 
+	u'AlbumArtist', u'AlbumArtistSort', u'AlbumArtists', u'AlbumArtistsSort', u'Artist',
+	u'ArtistSort', u'Date', u'LabelId', u'Title', u'Performer', u'PerformerSort', u'TrackNumber', 
 	u'musicbrainz_albumartistid', u'musicbrainz_albumid', u'musicbrainz_artistid',
 	u'musicbrainz_trackid', 
 	u'replaygain_album_peak', u'replaygain_album_gain', 
