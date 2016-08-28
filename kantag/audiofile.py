@@ -17,7 +17,9 @@ import os
 import mutagen.id3
 import mutagen.oggvorbis
 import mutagen.flac
+import mutagen.easymp4
 import tagmaps, exceptions
+import pprint
 from util import TagValue
 from tagset import TagSet
 
@@ -197,7 +199,14 @@ def _read_flac(path, warn):
 	Read the existing tags from a flac file, and return a list of TagValue named tuples.
 	"""
 	afile = mutagen.flac.FLAC(path)
-	return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
+	#print pprint.PrettyPrinter(indent=2).pformat(afile.tags)
+	#print [pprint.PrettyPrinter(indent=2).pformat(v) for v in afile.tags]
+	
+	result = [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
+	print pprint.PrettyPrinter(indent=2).pformat(result)
+	return result
+
+	#return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
 
 # --------------------------------------------------------------------------------------------------
 def _read_mp3(path, warn):
@@ -213,6 +222,21 @@ def _read_mp3(path, warn):
 	return result
 
 # --------------------------------------------------------------------------------------------------
+def _read_m4a(path, warn):
+	"""
+	Read the existing tags from an m4a file, and return a list of TagValue named tuples.
+	"""
+	# Register additional keys not supported by EasyMP4 by default.
+	for name, key in tagmaps.mp4_map.items():
+		mutagen.easymp4.EasyMP4Tags.RegisterFreeformKey(key, name)
+
+	result = []
+	afile = mutagen.easymp4.EasyMP4(path)
+	for key, values in afile.iteritems():
+		result.extend([TagValue(_map_tag(key, warn), v) for v in values])
+	return result
+
+# --------------------------------------------------------------------------------------------------
 def read_raw(path, warn=True):
 	"""
 	Read the existing tags from an audio file, and return a list of TagValue named tuples.
@@ -224,6 +248,8 @@ def read_raw(path, warn=True):
 		return _read_flac(path, warn)
 	elif ext == '.mp3':
 		return _read_mp3(path, warn)
+	elif ext == '.m4a':
+		return _read_m4a(path, warn)
 	else:
 		raise exceptions.FileTypeError('invalid file extension: ' + ext)
 
@@ -279,6 +305,22 @@ def _write_mp3(path, tagset):
 	afile.save(path)
 
 # --------------------------------------------------------------------------------------------------
+def _write_m4a(path, tagset):
+	"""
+	Write tags from a TagSet to an m4a file.
+	"""
+	# Register additional keys not supported by EasyMP4 by default.
+	for name, key in tagmaps.mp4_map.items():
+		mutagen.easymp4.EasyMP4Tags.RegisterFreeformKey(key, name)
+
+        afile = mutagen.easymp4.EasyMP4(path)
+	afile.delete()  # Needed to remove tags not mapped by EasyMP4.
+        afile.clear()
+        for tag, values in tagset.iteritems():
+                afile[tag.lower()] = values
+        afile.save()
+
+# --------------------------------------------------------------------------------------------------
 def write(path, tagset):
 	"""
 	Write tags from a TagSet to an audio file.
@@ -290,5 +332,7 @@ def write(path, tagset):
 		_write_flac(path, tagset)
 	elif ext == '.mp3':
 		_write_mp3(path, tagset)
+	elif ext == '.m4a':
+		_write_m4a(path, tagset)
 	else:
 		raise exceptions.FileTypeError('invalid file extension: ' + ext)
