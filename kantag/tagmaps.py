@@ -95,6 +95,8 @@ cannonical_tags = frozenset([
 	u'acoustid_id',
 	u'musicbrainz_albumartistid',
 	u'musicbrainz_albumid',
+	u'musicbrainz_albumstatus',
+	u'musicbrainz_albumtype',
 	u'musicbrainz_artistid',
 	u'musicbrainz_discid',
 	u'musicbrainz_releasegroupid',
@@ -196,6 +198,7 @@ id3_read_map = {
 # Note that the destination value should be something in cannonical_tags.
 general_read_map = {
 	u'remixer': u'Arranger',
+	u'djmixer': u'Arranger',
 	u'disctotal': u'TotalDiscs',
 	u'tracktotal': u'TotalTracks'
 	}
