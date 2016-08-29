@@ -274,10 +274,10 @@ mp4_map = {
 	b'work': 'work',
 	b'writer': 'writer',
 	b'writersort': 'writersort',
-        b'replaygain_album_peak': 'replaygain_album_peak',
-        b'replaygain_album_gain': 'replaygain_album_gain',
-        b'replaygain_track_peak': 'replaygain_track_peak',
-        b'replaygain_track_gain': 'replaygain_track_gain'
+	b'replaygain_album_peak': 'replaygain_album_peak',
+	b'replaygain_album_gain': 'replaygain_album_gain',
+	b'replaygain_track_peak': 'replaygain_track_peak',
+	b'replaygain_track_gain': 'replaygain_track_gain'
 }
 
 """ vcomment/ID3 map used by foobar2000; for development reference only. """
