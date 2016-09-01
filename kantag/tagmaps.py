@@ -155,6 +155,7 @@ id3_read_map = {
 	u'TXXX:LYRICISTSORT': u'LyricistSort',
 	u'TMED': u'Media',
 	u'TDOR': u'OriginalDate',
+	u'TXXX:originalyear': u'OriginalDate',
 	u'TXXX:PART': u'Part',
 	u'TXXX:PERFORMER': u'Performer',
 	u'TMCL': u'Performer',
