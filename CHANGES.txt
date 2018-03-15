@@ -22,10 +22,13 @@
     MusicBrainz web service.
   * Add ISRC to recognized tags; unsupported by initkan.
   * Add support for ID3 TDOR frame.
-  * Add support for additional tags supported by Picard 1.3.x, such as multi-
-    value AlbumArtists tags, musicbrainz_releasetrackid, and work title.
+  * Add support for additional tags supported by Picard, such as multi-value
+    AlbumArtists tags, work title, musicbrainz_releasetrackid,
+    musicbrainz_albumstatus, and musicbrainz_albumtype.
   * Add basic support for total tracks/total discs.  initkan will not write them
     by default, but will read them without warning.
   * Fix bug that caused an error in path inference function.
   * initkan: Fix crash if no musicbrainz ids are present.
   * Change tag inference to set title if the exsting title starts with "Track ".
+  * Add MP4 file support.
+  * Add support for ID3 TXXX:original date.
