@@ -218,7 +218,7 @@ class TagLine(object):
 # --------------------------------------------------------------------------------------------------
 class TagFile(object):
 	""" 
-	Represents a collection of lines from a kintag tag file.
+	Represents a collection of lines from a kantag tag file.
 	"""
 	def __init__(self, warn=True):
 		self._lines = []
