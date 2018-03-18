@@ -60,6 +60,14 @@ tags recognized by by the *kantag* tools that are not necessary output by
 Installation
 ============
 
+.. warning::
+
+    Some Linux distributions discourage installation of system-level python
+    packages using ``pip`` or ``setup.py install``, due to collisions with the
+    system package manager.  In those cases, dependencies should be installed
+    through the package manager, if possible, or choose a user folder
+    installation method.
+
 Using pip
 ---------
 
