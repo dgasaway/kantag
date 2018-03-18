@@ -15,17 +15,16 @@
 from listdict import ListDict
 
 class TagSet(ListDict):
-	"""
-	Represents a set of tag/value sets that could be applied to an audio file.  Each item in the
-	ListDict is keyed by a tag name, and contains a list of values for that name.
-	""" 
-	
-	# --------------------------------------------------------------------------------------------------
-	def __init__(self, tags=None):
-		"""
-		Initializes an instance from a list of TagValue named tuples.
-		"""
-		if tags is not None:
-			for tagvalue in tags:
-				self.append_unique(tagvalue.tag, tagvalue.value)
-				
+    """
+    Represents a set of tag/value sets that could be applied to an audio file.  Each item in the
+    ListDict is keyed by a tag name, and contains a list of values for that name.
+    """
+
+    # --------------------------------------------------------------------------------------------------
+    def __init__(self, tags=None):
+        """
+        Initializes an instance from a list of TagValue named tuples.
+        """
+        if tags is not None:
+            for tagvalue in tags:
+                self.append_unique(tagvalue.tag, tagvalue.value)

@@ -16,11 +16,11 @@ import collections
 import argparse
 
 class ToggleAction(argparse.Action):
-	"""
-	An argparse Action that will convert a y/n arg value into True/False.
-	"""
-	def __call__(self, parser, ns, values, option_string):
-		setattr(ns, self.dest, True if values[0] == 'y' else False)
+    """
+    An argparse Action that will convert a y/n arg value into True/False.
+    """
+    def __call__(self, parser, ns, values, option_string):
+        setattr(ns, self.dest, True if values[0] == 'y' else False)
 
 # Basic metadata pair.
 TagValue = collections.namedtuple('TagValue', 'tag, value')
