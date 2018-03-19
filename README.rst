@@ -54,7 +54,6 @@ tags recognized by by the *kantag* tools that are not necessary output by
 
     $ applykan -v tags.kan *.ogg
 
-
 Installation
 ============
 
@@ -66,8 +65,8 @@ Installation
     through the package manager, if possible, or choose a user folder
     installation method.
 
-Using pip
----------
+Installing with pip
+-------------------
 
 If your system has ``pip`` installed, and you have access to install software in
 the system packages, then *kantag* kan be installed as administrator from 
@@ -80,8 +79,8 @@ in the system location, it can be installed in a user folder::
 
     $ pip install --user kantag
 
-From Source
------------
+Installing from source
+----------------------
 
 Either download a release tarball from the
 `Downloads <https://bitbucket.org/dgasaway/kantag/downloads/>`_ page, and
@@ -104,12 +103,13 @@ in the system location, it can be installed in a user folder::
     $ python setup.py install --user
 
 
-File format
+File Format
 ===========
 
 Overall, if the *kantag* file contains any non-ASCII characters, it should be
 UTF-8 encoded without BOM. Each line is parsed according to the rules below.
 Blank lines are allowed and ignored.
+
 
 Line format
 -----------
