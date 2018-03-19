@@ -7,7 +7,7 @@
   * Remove module imports from __init__.py so that tools showkan can work without
     python-musicbrainz2.
 
-<tbd>, kantag v1.1.0
+2018-03-18, kantag v1.1.0
   * Fix detection of various artist releases.
   * Add support for acoustid_id, Writer, musicbrainz_trackid, 
     musicbrainz_releasegroupid, and musicbrainz_discid tags.
