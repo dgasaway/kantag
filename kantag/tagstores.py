@@ -1,6 +1,6 @@
 # tagstores.py - kantag heirachical metadata containers and builders.
-# Copyright (C) 2013 David Gasaway
-# http://code.google.com/p/kantag/
+# Copyright (C) 2018 David Gasaway
+# https://bitbucket.org/dgasaway/kantag/
 
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU
 # General Public License as published by the Free Software Foundation; either version 2 of the
