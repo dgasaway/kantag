@@ -103,8 +103,8 @@ def main():
         help='parse Work and/or Part from Title [default=y]',
         action=ToggleAction, choices=['y', 'n'], default=True)
     group.add_argument('-d', '--parse-disc',
-        help='parse DiscNumber and/or DiscSubtitle from Album [default=y]',
-        action=ToggleAction, choices=['y', 'n'], default=True)
+        help='parse DiscNumber and/or DiscSubtitle from Album [default=n]',
+        action=ToggleAction, choices=['y', 'n'], default=False)
     group.add_argument('-i', '--remove-instruments',
         help='remove instrument information from Performer tags [default=y]',
         action=ToggleAction, choices=['y', 'n'], default=True)
@@ -114,6 +114,9 @@ def main():
     group.add_argument('-M', '--call-musicbrainz',
         help='enable calls to the musicbrainz web service [default=n]',
         action=ToggleAction, choices=['y', 'n'], default=False)
+    group.add_argument('--locale',
+        help='artist alias locale to use for musicbrainz data [default=en]',
+        action='store', type=str, default='en')
     #group.add_argument('--keep-common',
     #    help='keep common/shared tags from removal from lower levels (WILL BREAK some '
     #    'assumptions and make a mess of the output -- DEBUG USE ONLY)',
@@ -520,7 +523,6 @@ def process_files(args):
     Generate kantag format output for the selected files.
     """
     # Get a Release object containing tags for all the files.
-    #rel = util.get_tags(args.audio_files, args)
     rel_builder = ReleaseBuilder(args)
     rel_builder.read(args.audio_files)
     rel = rel_builder.release

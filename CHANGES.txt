@@ -32,3 +32,15 @@
   * Change tag inference to set title if the exsting title starts with "Track ".
   * Add MP4 file support.
   * Add support for ID3 TXXX:original date.
+
+<tbd>, kantag v1.2.0
+  * Ported from deprecated python_musicbrainz2 to python_musicbrainzngs.  "NGS"
+    was a very big change for MusicBrainz, and some kantag APIs needed to change
+    drastically as a result.  The upside is more features, better data, and
+    greatly improved performance in some cases.
+  * initkan: Add '--locale' to retrieve locale-specific artist aliases when
+    using '--call-musicbrainz'.
+  * initkan: Argument '--parse-disc' now defaults off, as it was designed for
+    a release title style that was deprecated at MusicBrainz long ago.  Still
+    available for dealing with legacy data in local files.
+    

@@ -37,7 +37,7 @@ setup(
     python_requires='~=2.7',
     install_requires=[
         'mutagen >= 1.20',
-        'python-musicbrainz2 >= 0.7.2',
+        'musicbrainzngs >= 0.6',
     ],
     keywords='audio music metadata tags',
     classifiers=[

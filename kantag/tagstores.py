@@ -17,7 +17,8 @@ import sys
 import os.path
 import pprint
 from tagset import TagSet
-import audiofile, musicbrainz
+import audiofile
+import musicbrainz as mb
 
 # --------------------------------------------------------------------------------------------------
 class TagStore(object):
@@ -196,19 +197,27 @@ class _TagStoreBuilder(object):
     """
     Base class for TagStore build helpers.
     """
-    def __init__(self, entity=None):
+    def __init__(self, options, entity=None):
+        self._options = options
         self._entity = entity
 
     # ----------------------------------------------------------------------------------------------
-    def apply_musicbrainz_relation(self, rel):
+    def apply_musicbrainz_relation(self, relation):
         """
         Apply a musicbrainz Relation to the given TagSet.
         """
         # If the tag already contains this sortname for this particular arist, we'll replace it with
         # the regular name, and vice versa (useful for working with some legacy data).
         entity = self._entity
-        entity.tags.append_replace(rel.type, rel.sortname, rel.name)
-        entity.tags.append_replace(rel.type + u'Sort', rel.name, rel.sortname)
+        entity.tags.append_replace(relation.type, relation.sortname, relation.name)
+        entity.tags.append_replace(relation.type + u'Sort', relation.name, relation.sortname)
+
+    # ----------------------------------------------------------------------------------------------
+    def apply_musicbrainz_relations(self, relations):
+        """
+        Apply a list musicbrainz Relation instances to the given TagSet.
+        """
+        map(self.apply_musicbrainz_relation, relations)
 
     # ----------------------------------------------------------------------------------------------
     def _set_artist_statuses(self, common_values, various):
@@ -253,8 +262,8 @@ class TrackBuilder(_TagStoreBuilder):
     """
     Helper for building a Track object from a file.
     """
-    def __init__(self, track=None):
-        _TagStoreBuilder.__init__(self, track)
+    def __init__(self, options, track=None):
+        _TagStoreBuilder.__init__(self, options, track)
         if self._entity is None:
             self._entity = Track()
 
@@ -308,7 +317,7 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         if u'Album' in tags:
             for title in tags[u'Album']:
-                parsed = musicbrainz.parse_album_title(title)
+                parsed = mb.parse_album_title(title)
                 if parsed.discnum is not None:
                     tags[u'Album'] = [parsed.title]
                     tags[u'DiscNumber'] = [parsed.discnum]
@@ -323,11 +332,12 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         if u'Title' in tags:
             for title in tags[u'Title']:
-                parsed = musicbrainz.parse_track_title(title)
+                parsed = mb.parse_track_title(title)
                 if parsed.parts is not None:
                     tags.remove(u'Title', title)
                     if parsed.work is not None:
-                        tags.append_unique(u'Work', parsed.work)
+                        #tags.append_unique(u'Work', parsed.work)
+                        tags[u'Work'] = [parsed.work]
                     for part in parsed.parts:
                         tags.append_unique(u'Part', part)
                 if u'Work' not in tags and classical:
@@ -340,28 +350,171 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
         if u'Performer' in tags:
-            tags[u'Performer'] = musicbrainz.remove_artist_roles(tags[u'Performer'])
+            tags[u'Performer'] = mb.remove_artist_roles(tags[u'Performer'])
 
     # ----------------------------------------------------------------------------------------------
-    def apply_musicbrainz(self):
+    def _apply_release_data(self, mb_release):
         """
-        Call the musicbrainz service and apply results to the Track. The track tags must contain a
-        'musicbrainz_trackid' value.
+        Apply release-level musicbrainz metadata to track tags.
         """
         tags = self.track.tags
-        if u'musicbrainz_trackid' in tags:
-            for mbid in tags['musicbrainz_trackid']:
-                mbtrack = musicbrainz.get_track_by_id(mbid)
-                for rel in musicbrainz.get_track_artist_relations(mbtrack):
-                    self.apply_musicbrainz_relation(rel)
+
+        artists = mb.get_artists(mb_release, self._options.locale)
+        tags[u'AlbumArtists'] = [artist.name for artist in artists]
+        tags[u'AlbumArtistsSort'] = [artist.sortname for artist in artists]
+        if len(artists) == 1:
+            tags[u'AlbumArtist'] = [artists[0].name]
+            tags[u'AlbumArtistSort'] = [artists[0].sortname]
+
+        # There used to be a call to mb.parse_album_title here, but that should no longer be
+        # necessary, as that is deprecated style.
+        # TODO: Unicode punctuation.
+        tags[u'Album'] = [mb_release['title']]
+        
+        # Use the earliest (US) release date and earliest release group release date.
+        date = mb.get_earliest_release(mb_release)
+        if date is not None:
+            tags[u'Date'] = [date]
+        orig_date = mb.get_earliest_rg_release(mb_release)
+        if orig_date is not None:
+            if u'Date' in tags:
+                if orig_date != tags[u'Date'][0]:
+                    tags[u'OriginalDate'] = [orig_date]
+            else:
+                tags[u'Date'] = [date]
+        
+        # Barcode, ASIN, CatalogNumber.
+        if 'asin' in mb_release:
+            tags[u'ASIN'] = [mb_release['asin']]
+        if 'barcode' in mb_release and mb_release['barcode'] != '':
+            tags[u'Barcode'] = [mb_release['barcode']]
+        catnum = mb.get_release_catalognumber(mb_release)
+        if not catnum is None:
+            tags[u'CatalogNumber'] = [catnum]
+        
+        # Add the artist relations using sortnames.
+        self.apply_musicbrainz_relations(mb.get_artist_relations(mb_release, self._options.locale))
+        
+    # ----------------------------------------------------------------------------------------------
+    def _apply_medium_data(self, mb_medium):
+        """
+        Apply medium-level musicbrainz metadata to track tags.
+        """
+        tags = self.track.tags
+        if 'title' in mb_medium:
+            # TODO: Unicode punctuation.
+            tags[u'DiscSubtitle'] = [mb_medium['title']]
+
+    # ----------------------------------------------------------------------------------------------
+    def _apply_track_data(self, mb_track):
+        """
+        Apply track-level musicbrainz metadata to track tags.  Returns whether a track title was
+        found.
+        """
+        tags = self.track.tags
+
+        found_title = ('title' in mb_track)
+        if found_title:
+            # TODO: Unicode punctuation.
+            tags[u'Title'] = [mb_track['title']]
+
+        # TODO: Are these 'supported' fields?  Add initkan support?
+        artists = mb.get_artists(mb_track, self._options.locale)
+        tags[u'Artists'] = [artist.name for artist in artists]
+        tags[u'ArtistsSort'] = [artist.sortname for artist in artists]
+        if len(artists) == 1:
+            tags[u'Artist'] = [artists[0].name]
+            tags[u'ArtistSort'] = [artists[0].sortname]
+        
+        return found_title
+
+    # ----------------------------------------------------------------------------------------------
+    def _apply_recording_data(self, mb_recording, apply_title):
+        """
+        Apply recording-level musicbrainz metadata to the track tags.  'apply_title' indicates
+        whether recording title should overwrite an existing title tag.
+        """
+        tags = self.track.tags
+
+        if (not u'Title' in tags or apply_title) and 'title' in mb_recording:
+            # TODO: Unicode punctuation.
+            tags[u'Title'] = [mb_recording['title']]
+
+        # Add the artist relations using sortnames.
+        locale = self._options.locale
+        self.apply_musicbrainz_relations(mb.get_artist_relations(mb_recording, locale))
+
+    # ----------------------------------------------------------------------------------------------
+    def _apply_work_data(self, mb_work, recurse, apply_title):
+        tags = self.track.tags
+
+        #mb_work = mb.get_work_by_id(mb_work['id']);
+        if apply_title:
+            # TODO: Unicode punctuation.
+            title = mb_work['title']
+            tags[u'Work'] = [title]
+            if self._options.parse_title:
+                parsed = mb.parse_track_title(title)
+                if parsed.parts is not None:
+                    if parsed.work is not None:
+                        #tags.append_unique(u'Work', parsed.work)
+                        tags[u'Work'] = [parsed.work]
+                    for part in parsed.parts:
+                        tags.append_unique(u'Part', part)
+
+        # Add the artist relations using sortnames.
+        rels = mb.get_work_artist_relations(mb_work, recurse, self._options.locale)
+        #pprint.pprint(rels, stream=sys.stderr)
+        self.apply_musicbrainz_relations(rels)
+
+    # ----------------------------------------------------------------------------------------------
+    def apply_musicbrainz(self, mbdata):
+        """
+        Apply musicbrainz metadata to the track tags.  'mbdata' should be a release instance
+        returned by the musicbrainz API.  The track needs 'TrackNumber' and 'DiscNumber' tags to
+        receive medium, track, recording, and work metadata.
+        """
+        # Note: All data is initially loaded into track tags - from existing tags, inferred from
+        # path, etc.  On the other hand, musicbrainz data is hierarchical.  Which means, in order
+        # to edit existing data with musicbrainz data, we need to either first merge track data to
+        # "unflatten" before applying musicbrainz data, or first "flatten" the musicbrainz data to
+        # track level.  Earlier revisions used the former approach, but this didn't always work out
+        # as desired, and was more difficult to implement.  Now, we use the latter approach, and
+        # rely on the built-in "merging" logic rebuild the heirarchy post-edit.  Thus, musicbrainz
+        # data is applied to track objects only.
+
+        tags = self.track.tags
+        
+        self._apply_release_data(mbdata)
+        medium_num = (tags[u'DiscNumber'][0] if u'DiscNumber' in tags else '1')
+        mb_medium = mb.get_release_medium(mbdata, medium_num)
+        if not mb_medium is None:
+            self._apply_medium_data(mb_medium)
+
+            mb_track = mb.get_medium_track(mb_medium, self.track.number)
+            if not mb_track is None:
+                # If the track title matches the recording title, then the API will not include a
+                # title on the track, so we need to pull it from the recording instead.
+                found_title = self._apply_track_data(mb_track)
+
+                mb_recording = mb.get_track_recording(mb_track)
+                if not mb_recording is None:
+                    self._apply_recording_data(mb_recording, not found_title)
+
+                    # Only apply the work title from the first.
+                    apply_title = True
+                    for mb_work in mb.get_recording_works(mb_recording):
+                        # TODO: Make work recursion an option.
+                        self._apply_work_data(mb_work, False, apply_title)
+                        apply_title = False
 
 # --------------------------------------------------------------------------------------------------
 class DiscBuilder(_TagStoreBuilder):
     """
     Helper for building a Disc from files.
     """
-    def __init__(self, disc=None):
-        _TagStoreBuilder.__init__(self, disc)
+    def __init__(self, options, disc=None):
+        _TagStoreBuilder.__init__(self, options, disc)
         if self._entity is None:
             self._entity = Disc()
 
@@ -378,57 +531,14 @@ class DiscBuilder(_TagStoreBuilder):
         """
         self._merge_children(various, keep_common)
 
-    # ----------------------------------------------------------------------------------------------
-    def apply_musicbrainz(self):
-        """
-        Call the musicbrainz service and apply results to the Disc. The disc tags must contain a
-        'musicbrainz_albumid' value.
-        """
-
-        # TODO: At some time in the future, this should be moved to the release level.
-        # Musicbrainz album IDs are now tied to the release, not the disc.  So the existing code
-        # will end up feching the same release metadata for each disc, and those will all get
-        # merged to the release level.  Although it seems you could immediately move this operation
-        # to the release level and get the same result, the problem is the pre-NGS IDs stored in
-        # existing files.  Pre-NGS, each disc will have a different album ID, which will *not*
-        # merge up to release level, so when querying for 'musicbrainz_albumid' at the release
-        # level, you'll get nothing.
-
-        tags = self.disc.tags
-        if u'musicbrainz_albumid' in tags:
-            for mbid in tags[u'musicbrainz_albumid']:
-                # Call the web service.
-                release = musicbrainz.get_release_by_id(mbid)
-                self.disc.is_single_artist = release.isSingleArtistRelease()
-
-                # Parse the album title in case it is a musicbrainz-style multi-disc title.
-                parsed = musicbrainz.parse_album_title(release.title)
-                if parsed.discnum is not None:
-                    tags[u'Album'] = [parsed.title]
-                    tags[u'DiscNumber'] = [parsed.discnum]
-                if parsed.subtitle is not None:
-                    tags[u'DiscSubtitle'] = [parsed.subtitle]
-
-                # Get the date of the earliest release date (US preferred).
-                date = musicbrainz.get_earliest_release(release)
-                if date is not None:
-                    if u'Date' not in tags:
-                        tags[u'Date'] = [date]
-                    elif date != tags[u'Date'][0] and u'OriginalDate' not in tags:
-                        tags[u'OriginalDate'] = [date]
-
-                # Add the artist relations using sortnames.
-                for rel in musicbrainz.get_release_artist_relations(release):
-                    self.apply_musicbrainz_relation(rel)
-
 # --------------------------------------------------------------------------------------------------
 class ReleaseBuilder(_TagStoreBuilder):
     """
     Helper for building a Release heirarchy from files.
     """
     def __init__(self, options, release=None):
-        _TagStoreBuilder.__init__(self, release)
-        self._options = options
+        _TagStoreBuilder.__init__(self, options, release)
+        self._musicbrainz_data = None
         if self._entity is None:
             self._entity = Release()
 
@@ -437,6 +547,15 @@ class ReleaseBuilder(_TagStoreBuilder):
     def release(self):
         """The underlying Release object."""
         return self._entity
+
+    # ----------------------------------------------------------------------------------------------
+    @property
+    def musicbrainz_data(self):
+        """MusicBrainz API data about the release."""
+        return self._musicbrainz_data
+    @musicbrainz_data.setter
+    def musicbrainz_data(self, value):
+        self._musicbrainz_data = value
 
     # ----------------------------------------------------------------------------------------------
     def merge_discs(self):
@@ -452,7 +571,7 @@ class ReleaseBuilder(_TagStoreBuilder):
         the existing tags have gaps and can be inferred from filename/path).  Also does some release
         and track title parsing based on musicbrainz-originated titles.
         """
-        builder = TrackBuilder()
+        builder = TrackBuilder(self._options)
         builder.read(filename)
 
         # Fill in gaps using filename/path.
@@ -467,10 +586,6 @@ class ReleaseBuilder(_TagStoreBuilder):
         if self._options.parse_disc:
             builder.split_disc_title()
 
-        # Parse track title into work/part.
-        if self._options.parse_title:
-            builder.split_title_to_work_and_parts(self._options.classical)
-
         # Temporarily make sure everything is 'Various Artists' so we don't have issues with unique
         # appends or replaces with mismatched values.
         tags = builder.track.tags
@@ -483,9 +598,20 @@ class ReleaseBuilder(_TagStoreBuilder):
         tags.replace(u'AlbumArtistsSort', u'Various', u'Various Artists')
         tags.replace(u'AlbumArtistsSort', self._options.various, u'Various Artists')
 
-        # Add artist relations from musicbrainz to the track tags.
+        # Note: Some old musicbrainz metadata will have a different albumid for each disc in a
+        # multi-disc release.  This is an artifact of the days when musicbrainz represented each
+        # disc as a different release.  However, the API will return the same full release metadata
+        # for either mbid.
         if self._options.call_musicbrainz:
-            builder.apply_musicbrainz()
+            if self.musicbrainz_data is None and u'musicbrainz_albumid' in tags:
+                self.musicbrainz_data = mb.get_release_by_id(tags[u'musicbrainz_albumid'][0])
+
+        if not self.musicbrainz_data is None:
+            builder.apply_musicbrainz(self.musicbrainz_data)
+
+        # Parse track title into work/part.
+        if self._options.parse_title:
+            builder.split_title_to_work_and_parts(self._options.classical)
 
         return builder.track
 
@@ -530,16 +656,8 @@ class ReleaseBuilder(_TagStoreBuilder):
 
         for disc in release.discs:
             # Merge values that are common to all tracks in a disc into the disc tags.
-            dbuilder = DiscBuilder(disc)
+            dbuilder = DiscBuilder(self._options, disc)
             dbuilder.merge_tracks(self._options.various, self._options.keep_common)
-
-            # Populate the disc tags with musicbrainz data.  Note we want to do that after merging
-            # the track common values, rather than on initialization of the disc.  If populated at
-            # init, names/sortnames in the source file would be in track tags, not get corrected by
-            # the track AR processing (they're not track ARs), and then get merged after-the-fact
-            # into the disc tags (which were already corrected by release AR processing).
-            if self._options.call_musicbrainz:
-                dbuilder.apply_musicbrainz()
 
         # Merge values that are common to all discs in the release into the release tags.
         self.merge_discs()
