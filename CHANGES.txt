@@ -43,4 +43,6 @@
   * initkan: Argument '--parse-disc' now defaults off, as it was designed for
     a release title style that was deprecated at MusicBrainz long ago.  Still
     available for dealing with legacy data in local files.
+  * initkan: Add '--track-artists' to support multi-value 'Artists' and
+    'AritstsSort' tags for tracks.
     

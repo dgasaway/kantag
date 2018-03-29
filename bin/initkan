@@ -149,11 +149,15 @@ def main():
     group.add_argument('-w', '--work-block',
         help='output works in a block before the track list [default=n]',
         action=ToggleAction, choices=['y', 'n'], default=False)
+    group.add_argument('--track-artists',
+        help='output multi-artist Arists tags for tracks [default=n]',
+        action=ToggleAction, choices=['y', 'n'], default=False)
     group.add_argument('-u', '--output-unsupported',
         help='output tags that are not explicitly supported [default=n]',
         action=ToggleAction, choices=['y', 'n'], default=False)
 
     parser.set_defaults(keep_common=False)
+    global args
     args = parser.parse_args()
     if args.verbose >= 2:
         print >> sys.stderr, '<Arguments>'
@@ -166,7 +170,7 @@ def main():
 
     # Write the output.
     try:
-        process_files(args)
+        process_files()
     except TaggingError as e:
         print >> sys.stderr, 'An exception occurred:\n' + \
             ';'.join(e.args).encode('utf-8')
@@ -191,6 +195,15 @@ def add_artists(builder, entity, parent=None):
     """
     builder.add_values(entity, 'Artist', parent)
     builder.add_values(entity, 'ArtistSort', parent)
+    if args.track_artists:
+        if 'Artists' in entity.tags:
+            builder.add_values(entity, 'Artists', parent)
+        else:
+            builder.add_values_as(entity, 'Artist', 'Artists', parent)
+        if 'ArtistsSort' in entity.tags:
+            builder.add_values(entity, 'ArtistsSort', parent)
+        else:
+            builder.add_values_as(entity, 'ArtistSort', 'ArtistsSort', parent)
 
 # --------------------------------------------------------------------------------------------------
 def add_composers(builder, entity, parent=None):
@@ -286,7 +299,7 @@ def add_replaygain(builder, rel):
                 builder.add_values(track, tag, disc)
 
 # --------------------------------------------------------------------------------------------------
-def add_structured(builder, rel, args):
+def add_structured(builder, rel):
     """
     Add standard tag lines from a Release tagstore to a TagFileBuilder.
     """
@@ -518,7 +531,7 @@ def add_unstructured(builder, rel):
             add_tagset(builder, track, disc)
 
 # --------------------------------------------------------------------------------------------------
-def process_files(args):
+def process_files():
     """
     Generate kantag format output for the selected files.
     """
@@ -534,7 +547,7 @@ def process_files(args):
 
     if args.structured:
         if args.standard:
-            add_structured(builder, rel, args)
+            add_structured(builder, rel)
         if args.musicbrainz:
             builder.add_blank()
             add_musicbrainz(builder, rel)

@@ -416,8 +416,8 @@ class TrackBuilder(_TagStoreBuilder):
             # TODO: Unicode punctuation.
             tags[u'Title'] = [mb_track['title']]
 
-        # TODO: Are these 'supported' fields?  Add initkan support?
         artists = mb.get_artists(mb_track, self._options.locale)
+        pprint.pprint(artists, stream=sys.stderr)
         tags[u'Artists'] = [artist.name for artist in artists]
         tags[u'ArtistsSort'] = [artist.sortname for artist in artists]
         if len(artists) == 1:
