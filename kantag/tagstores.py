@@ -17,7 +17,7 @@ import sys
 import os.path
 import pprint
 from tagset import TagSet
-import audiofile
+import audiofile, util
 import musicbrainz as mb
 
 # --------------------------------------------------------------------------------------------------
@@ -317,7 +317,7 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         if u'Album' in tags:
             for title in tags[u'Album']:
-                parsed = mb.parse_album_title(title)
+                parsed = util.parse_album_title(title)
                 if parsed.discnum is not None:
                     tags[u'Album'] = [parsed.title]
                     tags[u'DiscNumber'] = [parsed.discnum]
@@ -332,7 +332,7 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         if u'Title' in tags:
             for title in tags[u'Title']:
-                parsed = mb.parse_track_title(title)
+                parsed = util.parse_track_title(title)
                 if parsed.parts is not None:
                     tags.remove(u'Title', title)
                     if parsed.work is not None:
@@ -350,7 +350,7 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
         if u'Performer' in tags:
-            tags[u'Performer'] = mb.remove_artist_roles(tags[u'Performer'])
+            tags[u'Performer'] = util.remove_artist_roles(tags[u'Performer'])
 
     # ----------------------------------------------------------------------------------------------
     def _apply_release_data(self, mb_release):
@@ -366,8 +366,6 @@ class TrackBuilder(_TagStoreBuilder):
             tags[u'AlbumArtist'] = [artists[0].name]
             tags[u'AlbumArtistSort'] = [artists[0].sortname]
 
-        # There used to be a call to mb.parse_album_title here, but that should no longer be
-        # necessary, as that is deprecated style.
         # TODO: Unicode punctuation.
         tags[u'Album'] = [mb_release['title']]
         
@@ -454,7 +452,7 @@ class TrackBuilder(_TagStoreBuilder):
             title = mb_work['title']
             tags[u'Work'] = [title]
             if self._options.parse_title:
-                parsed = mb.parse_track_title(title)
+                parsed = util.parse_track_title(title)
                 if parsed.parts is not None:
                     if parsed.work is not None:
                         #tags.append_unique(u'Work', parsed.work)

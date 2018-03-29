@@ -42,10 +42,9 @@ _mbz_reltype_map = {
     'writer'              : u'Writer'
     }
 
-NameRole = collections.namedtuple('NameRole', 'name, role')
-WorkParts = collections.namedtuple('WorkParts', 'work, parts')
-AlbumTitle = collections.namedtuple('AlbumTitle', 'title, discnum, subtitle')
+""" Representation of an artist relation. """
 Relation = collections.namedtuple('Relation', 'type, name, sortname')
+""" An artist name-sortname pair. """
 ArtistName = collections.namedtuple('ArtistName', 'name, sortname')
 
 # Initialize the user agent.
@@ -91,60 +90,6 @@ def get_work_by_id(workid, include_work_rels=False):
     incs = ['artist-rels', 'work-rels', 'aliases']
     result = ngs.get_work_by_id(workid, includes=incs)['work']
     return result
-
-# --------------------------------------------------------------------------------------------------
-def parse_artist_role(artist):
-    """
-    Parse a musicbrainz-style performer name/role string into parts.  The result is a NamedRole
-    named tuple.
-    """
-    match = re.match(r'^(?P<name>[^(]*) \((?P<role>.*)\)$', artist)
-    if match:
-        return NameRole(match.group('name'), match.group('role'))
-    else:
-        return NameRole(artist, None)
-
-# --------------------------------------------------------------------------------------------------
-def parse_track_title(full_title):
-    """
-    Parse a musicbrainz-style track title into work and parts.  The result is a WorkParts named
-    tuple.
-    """
-    work = None
-    match = re.match(r'^(?P<work>[^:]+): (?P<parts>.+)$', full_title)
-    if match:
-        work = match.group('work')
-        s = match.group('parts')
-    else:
-        s = full_title
-
-    parts = None
-    if s.find(' / ') > -1:
-        parts = s.split(' / ')
-    elif work is not None:
-        parts = [s]
-
-    return WorkParts(work, parts)
-
-# --------------------------------------------------------------------------------------------------
-def parse_album_title(full_title):
-    """
-    Parse a musicbrainz-style release title into a tuple containing the release title, the disc
-    number, and the disc subtitle.  The result is an AlbumTitle named tuple.
-    """
-    match = re.match(r'(?P<title>.+) \(disc (?P<disc>\d+)(: (?P<subtitle>.*))?\)', full_title)
-    if match:
-        return AlbumTitle(match.group('title'), match.group('disc'), match.group('subtitle'))
-    else:
-        return AlbumTitle(full_title, None, None)
-
-# --------------------------------------------------------------------------------------------------
-def remove_artist_roles(artists):
-    """
-    Return a list of artists with the musicbrainz-style artist roles removed.  The argument should
-    be a list of strings.
-    """
-    return [parse_artist_role(artist).name for artist in artists]
 
 # --------------------------------------------------------------------------------------------------
 def get_artist_primary_alias(artist, locale='en'):
@@ -256,7 +201,7 @@ def get_work_artist_relations(work, recurse=False, locale='en'):
 # --------------------------------------------------------------------------------------------------
 def get_earliest_release(release):
     """
-    Extracts the earliest US release date or earliest release date if no US date is available, from
+    Extract the earliest US release date or earliest release date if no US date is available, from
     a release returned by the musicbrainz API.  The result is a date as a string or None if no date
     was found.  Only looks at release events on the specific release.
     """
@@ -276,7 +221,7 @@ def get_earliest_release(release):
 # --------------------------------------------------------------------------------------------------
 def get_earliest_rg_release(release):
     """
-    Extracts the earliest release date for the release group associated with a release returned by
+    Extract the earliest release date for the release group associated with a release returned by
     the musicbrainz API.  The result is a date as a string or None if no date was found.
     """
     if 'release_group' in release and 'first-release-date' in release['release_group']:
@@ -287,7 +232,7 @@ def get_earliest_rg_release(release):
 # --------------------------------------------------------------------------------------------------
 def get_release_catalognumber(release):
     """
-    Extracts a label catalog number from a release returned by the musicbrainz API.  The result is a
+    Extract a label catalog number from a release returned by the musicbrainz API.  The result is a
     catalog number as a string or None if no catalog number was found.
     """
     if 'label-info-list' in release:
@@ -299,7 +244,7 @@ def get_release_catalognumber(release):
 # --------------------------------------------------------------------------------------------------
 def get_release_medium(release, number):
     """
-    Extracts a medium by number from a release returned by the musicbrainz API.  The result is a
+    Extract a medium by number from a release returned by the musicbrainz API.  The result is a
     musicbrainz API medium object.
     """
     if 'medium-list' in release:
@@ -311,7 +256,7 @@ def get_release_medium(release, number):
 # --------------------------------------------------------------------------------------------------
 def get_medium_track(medium, number):
     """
-    Extracts a track by number from a medium returned by the musicbrainz API.  The result is a
+    Extract a track by number from a medium returned by the musicbrainz API.  The result is a
     musicbrainz API track object.
     """
     if 'track-list' in medium:
@@ -323,7 +268,7 @@ def get_medium_track(medium, number):
 # --------------------------------------------------------------------------------------------------
 def get_track_recording(track):
     """
-    Extracts a recording from a track returned by the musicbrainz API.  The result is a musicbrainz
+    Extract a recording from a track returned by the musicbrainz API.  The result is a musicbrainz
     API recording object.
     """
     if 'recording' in track:
