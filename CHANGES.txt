@@ -39,7 +39,7 @@
     drastically as a result.  The upside is more features, better data, and
     greatly improved performance in some cases.
   * initkan: Add '--locale' to retrieve locale-specific artist aliases when
-    using '--call-musicbrainz'.
+    using '--call-musicbrainz'.  May not apply to all artists.
   * initkan: Argument '--parse-disc' now defaults off, as it was designed for
     a release title style that was deprecated at MusicBrainz long ago.  Still
     available for dealing with legacy data in local files.
