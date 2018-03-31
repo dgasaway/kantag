@@ -20,17 +20,18 @@ import io
 import pprint
 import re
 import argparse
+import imp
 from argparse import ArgumentParser
 
 # Patch sys.path if running with source directory layout.
 parentdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 if os.path.exists(os.path.join(parentdir, 'kantag', '__init__.py')):
     sys.path.insert(0, parentdir)
-from kantag.tagfile import TagFileBuilder
-from kantag.tagstores import Release, Disc, Track, ReleaseBuilder
 from kantag.util import ToggleAction
 from kantag.exceptions import TaggingError
 from kantag._version import __version__
+from kantag.tagfile import TagFileBuilder
+from kantag.tagstores import Release, Disc, Track, ReleaseBuilder
 
 # Lists of initkan supported tags.
 _release_tags = frozenset([
@@ -172,6 +173,13 @@ def main():
         print >> sys.stderr, '<Arguments>'
         print >> sys.stderr, pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n'
 
+    # Check for presence of musicbrainsngs.
+    try:
+        if args.call_musicbrainz == True:
+            import musicbrainzngs
+    except ImportError:
+        parser.error("musicbrainzngs package must be installed to use '--call-musicbrainz'")
+        
     # Check for valid files.
     for audio_file in args.audio_files:
         if not os.path.exists(audio_file):

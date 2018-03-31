@@ -15,10 +15,14 @@
 import re
 import sys
 import os.path
+import warnings
 import pprint
 from tagset import TagSet
 import audiofile, util, textencoding
-import musicbrainz as mb
+try:
+    import musicbrainz as mb
+except ImportError:
+    mb = None
 
 # --------------------------------------------------------------------------------------------------
 class TagStore(object):
@@ -467,6 +471,10 @@ class TrackBuilder(_TagStoreBuilder):
         returned by the musicbrainz API.  The track needs 'TrackNumber' and 'DiscNumber' tags to
         receive medium, track, recording, and work metadata.
         """
+        # Bail out of musicbrainz is not available.
+        if mb is None:
+            warnings.warn('musicbrainz package is not available')
+        
         # Note: All data is initially loaded into track tags - from existing tags, inferred from
         # path, etc.  On the other hand, musicbrainz data is hierarchical.  Which means, in order
         # to edit existing data with musicbrainz data, we need to either first merge track data to
