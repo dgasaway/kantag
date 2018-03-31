@@ -196,6 +196,14 @@ class ListDict(dict):
         return key in self and value in self[key]
 
     # ----------------------------------------------------------------------------------------------
+    def apply_to_all(self, key, func):
+        """
+        Apply a function to each value in the list at key.
+        """
+        if key in self:
+            self[key] = [func(value) for value in self[key]]
+
+    # ----------------------------------------------------------------------------------------------
     @staticmethod
     def get_common_values(dicts):
         """

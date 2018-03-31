@@ -17,7 +17,7 @@ import sys
 import os.path
 import pprint
 from tagset import TagSet
-import audiofile, util
+import audiofile, util, textencoding
 import musicbrainz as mb
 
 # --------------------------------------------------------------------------------------------------
@@ -366,7 +366,6 @@ class TrackBuilder(_TagStoreBuilder):
             tags[u'AlbumArtist'] = [artists[0].name]
             tags[u'AlbumArtistSort'] = [artists[0].sortname]
 
-        # TODO: Unicode punctuation.
         tags[u'Album'] = [mb_release['title']]
         
         # Use the earliest (US) release date and earliest release group release date.
@@ -400,7 +399,6 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
         if 'title' in mb_medium:
-            # TODO: Unicode punctuation.
             tags[u'DiscSubtitle'] = [mb_medium['title']]
 
     # ----------------------------------------------------------------------------------------------
@@ -413,11 +411,9 @@ class TrackBuilder(_TagStoreBuilder):
 
         found_title = ('title' in mb_track)
         if found_title:
-            # TODO: Unicode punctuation.
             tags[u'Title'] = [mb_track['title']]
 
         artists = mb.get_artists(mb_track, self._options.locale)
-        pprint.pprint(artists, stream=sys.stderr)
         tags[u'Artists'] = [artist.name for artist in artists]
         tags[u'ArtistsSort'] = [artist.sortname for artist in artists]
         if len(artists) == 1:
@@ -434,8 +430,8 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
 
+        tags[u'RecordingTitle'] = [mb_recording['title']]
         if (not u'Title' in tags or apply_title) and 'title' in mb_recording:
-            # TODO: Unicode punctuation.
             tags[u'Title'] = [mb_recording['title']]
 
         # Add the artist relations using sortnames.
@@ -448,7 +444,6 @@ class TrackBuilder(_TagStoreBuilder):
 
         #mb_work = mb.get_work_by_id(mb_work['id']);
         if apply_title:
-            # TODO: Unicode punctuation.
             title = mb_work['title']
             tags[u'Work'] = [title]
             if self._options.parse_title:
@@ -610,6 +605,16 @@ class ReleaseBuilder(_TagStoreBuilder):
         # Parse track title into work/part.
         if self._options.parse_title:
             builder.split_title_to_work_and_parts(self._options.classical)
+
+        # All track data is now loaded.  Apply optional removing of non-ASCII punctuation.
+        if self._options.ascii_punctuation:
+            tags.apply_to_all('Album', textencoding.asciipunct)
+            tags.apply_to_all('DiscSubtitle', textencoding.asciipunct)
+            tags.apply_to_all('Title', textencoding.asciipunct)
+            tags.apply_to_all('RecordingTitle', textencoding.asciipunct)
+            tags.apply_to_all('Work', textencoding.asciipunct)
+            tags.apply_to_all('Part', textencoding.asciipunct)
+            tags.apply_to_all('Version', textencoding.asciipunct)
 
         return builder.track
 

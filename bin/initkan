@@ -117,6 +117,9 @@ def main():
     group.add_argument('--locale',
         help='artist alias locale to use for musicbrainz data [default=en]',
         action='store', type=str, default='en')
+    group.add_argument('--ascii-punctuation',
+        help='replace non-ascii punctuation in titles with ascii equivalents [default=y]',
+        action=ToggleAction, choices=['y', 'n'], default=True)
     #group.add_argument('--keep-common',
     #    help='keep common/shared tags from removal from lower levels (WILL BREAK some '
     #    'assumptions and make a mess of the output -- DEBUG USE ONLY)',

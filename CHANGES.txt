@@ -43,6 +43,9 @@
   * initkan: Argument '--parse-disc' now defaults off, as it was designed for
     a release title style that was deprecated at MusicBrainz long ago.  Still
     available for dealing with legacy data in local files.
-  * initkan: Add '--track-artists' to support multi-value 'Artists' and
+  * initkan: Add '--track-artists' argument to support multi-value 'Artists' and
     'AritstsSort' tags for tracks.
-    
+  * initkan: Add '--ascii-punctuation' argument to support translation of
+    non-ascii punction in titles (release title, track title, work title, etc.)
+    with ascii equivalents.  Code borrowed from MusicBrainz picard.  Enabled by
+    default.
