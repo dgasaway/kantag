@@ -19,6 +19,7 @@ import os
 import io
 import pprint
 import re
+import argparse
 from argparse import ArgumentParser
 
 # Patch sys.path if running with source directory layout.
@@ -120,10 +121,15 @@ def main():
     group.add_argument('--ascii-punctuation',
         help='replace non-ascii punctuation in titles with ascii equivalents [default=y]',
         action=ToggleAction, choices=['y', 'n'], default=True)
-    #group.add_argument('--keep-common',
-    #    help='keep common/shared tags from removal from lower levels (WILL BREAK some '
-    #    'assumptions and make a mess of the output -- DEBUG USE ONLY)',
-    #    action='store_true', dest='keep_common', default=False)
+    # Keep common/shared tags from removal from lower levels.  WILL BREAK some assumptions and make
+    # a mess of the output.  DEBUG USE ONLY.
+    group.add_argument('--keep-common',
+        help=argparse.SUPPRESS,
+        action=ToggleAction, choices=['y', 'n'], default=False)
+    # 
+    group.add_argument('--api-format',
+        help=argparse.SUPPRESS,
+        action='store', choices=['xml', 'json'], default='json')
 
     group = parser.add_argument_group(title='output format arguments')
     group.add_argument('-S', '--structured',

@@ -48,13 +48,22 @@ Relation = collections.namedtuple('Relation', 'type, name, sortname')
 """ An artist name-sortname pair. """
 ArtistName = collections.namedtuple('ArtistName', 'name, sortname')
 
-# Initialize the user agent.
+""" API response format. """
 _format = 'json'
+
+# Initialize the user agent.
 ngs.set_useragent('kantag', __version__, 'https://bitbucket.org/dgasaway/kantag/')
-if _format == 'json':
+
+# --------------------------------------------------------------------------------------------------
+def _set_api_format(api_format):
+    """
+    Set the API format (xml or json).  FOR DEBUG USE ONLY.
+    """
+    global _format
+    _format = api_format
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        ngs.set_format(_format)
+        warnings.simplefilter('ignore')
+        ngs.set_format(api_format)
 
 # --------------------------------------------------------------------------------------------------
 def get_release_by_id(releaseid):
@@ -64,6 +73,7 @@ def get_release_by_id(releaseid):
     incs = ['artists', 'artist-credits', 'artist-rels', 'recordings', 'recording-level-rels',
             'work-rels', 'work-level-rels', 'release-groups', 'labels', 'aliases']
     result = ngs.get_release_by_id(releaseid, includes=incs)
+    print >> sys.stderr, "api format: " + _format
     if _format == 'json':
         return result
     else:

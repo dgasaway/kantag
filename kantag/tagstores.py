@@ -317,7 +317,7 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         if u'Album' in tags:
             for title in tags[u'Album']:
-                parsed = util.parse_album_title(title)
+                parsed = util.parse_album_title(unicode(title))
                 if parsed.discnum is not None:
                     tags[u'Album'] = [parsed.title]
                     tags[u'DiscNumber'] = [parsed.discnum]
@@ -332,7 +332,7 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         if u'Title' in tags:
             for title in tags[u'Title']:
-                parsed = util.parse_track_title(title)
+                parsed = util.parse_track_title(unicode(title))
                 if parsed.parts is not None:
                     tags.remove(u'Title', title)
                     if parsed.work is not None:
@@ -366,7 +366,7 @@ class TrackBuilder(_TagStoreBuilder):
             tags[u'AlbumArtist'] = [artists[0].name]
             tags[u'AlbumArtistSort'] = [artists[0].sortname]
 
-        tags[u'Album'] = [mb_release['title']]
+        tags[u'Album'] = [unicode(mb_release['title'])]
         
         # Use the earliest (US) release date and earliest release group release date.
         date = mb.get_earliest_release(mb_release)
@@ -399,7 +399,7 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
         if 'title' in mb_medium:
-            tags[u'DiscSubtitle'] = [mb_medium['title']]
+            tags[u'DiscSubtitle'] = [unicode(mb_medium['title'])]
 
     # ----------------------------------------------------------------------------------------------
     def _apply_track_data(self, mb_track):
@@ -411,7 +411,7 @@ class TrackBuilder(_TagStoreBuilder):
 
         found_title = ('title' in mb_track)
         if found_title:
-            tags[u'Title'] = [mb_track['title']]
+            tags[u'Title'] = [unicode(mb_track['title'])]
 
         artists = mb.get_artists(mb_track, self._options.locale)
         tags[u'Artists'] = [artist.name for artist in artists]
@@ -430,9 +430,9 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
 
-        tags[u'RecordingTitle'] = [mb_recording['title']]
+        tags[u'RecordingTitle'] = [unicode(mb_recording['title'])]
         if (not u'Title' in tags or apply_title) and 'title' in mb_recording:
-            tags[u'Title'] = [mb_recording['title']]
+            tags[u'Title'] = [unicode(mb_recording['title'])]
 
         # Add the artist relations using sortnames.
         locale = self._options.locale
@@ -444,7 +444,7 @@ class TrackBuilder(_TagStoreBuilder):
 
         #mb_work = mb.get_work_by_id(mb_work['id']);
         if apply_title:
-            title = mb_work['title']
+            title = unicode(mb_work['title'])
             tags[u'Work'] = [title]
             if self._options.parse_title:
                 parsed = util.parse_track_title(title)
@@ -596,6 +596,7 @@ class ReleaseBuilder(_TagStoreBuilder):
         # disc as a different release.  However, the API will return the same full release metadata
         # for either mbid.
         if self._options.call_musicbrainz:
+            mb._set_api_format(self._options.api_format)
             if self.musicbrainz_data is None and u'musicbrainz_albumid' in tags:
                 self.musicbrainz_data = mb.get_release_by_id(tags[u'musicbrainz_albumid'][0])
 
