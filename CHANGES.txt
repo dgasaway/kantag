@@ -49,3 +49,4 @@
     non-ascii punction in titles (release title, track title, work title, etc.)
     with ascii equivalents.  Code borrowed from MusicBrainz picard.  Enabled by
     default.
+  * initkan/showkan: No longer dump large blocks of data for embedded images.

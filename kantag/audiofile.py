@@ -98,6 +98,13 @@ def _break_ufid_frame(frame, tag):
     return [TagValue(tag, frame.data)]
 
 # --------------------------------------------------------------------------------------------------
+def _break_apic_frame(frame, tag):
+    """
+    Break a mutagen APIC ID3 frame into a list of TagValue named tuples.
+    """
+    return [TagValue(tag, repr(frame.type))]
+
+# --------------------------------------------------------------------------------------------------
 def _break_frame(frame, ftype, warn):
     """
     Break a mutagen ID3 frame into a list of TagValue named tuples.
@@ -106,6 +113,9 @@ def _break_frame(frame, ftype, warn):
     # that since it can't be reproduced in a tag file.
     if ftype.startswith('COMM:'):
         ftype = 'COMM'
+    # Similar with APIC.
+    if ftype.startswith('APIC:'):
+        ftype = 'APIC'
 
     if ftype in tagmaps.id3_read_map:
         tag = tagmaps.id3_read_map[ftype]
@@ -119,8 +129,12 @@ def _break_frame(frame, ftype, warn):
             return _break_tmcl_frame(frame, tag)
         elif isinstance(frame, mutagen.id3.UFID):
             return _break_ufid_frame(frame, tag)
+        elif isinstance(frame, mutagen.id3.APIC):
+            return _break_apic_frame(frame, tag)
         else:
-            raise exceptions.TaggingError('unexpected frame object encountered: ' + type(frame))
+            raise exceptions.TaggingError(
+                'unexpected frame object encountered: ' + repr(type(frame))
+                )
     else:
         if warn:
             print >> sys.stderr, 'warning: unknown ID3 frame type: ' + ftype
@@ -189,16 +203,30 @@ def _read_ogg(path, warn):
     """
     Read the existing tags from an ogg file, and return a list of TagValue named tuples.
     """
+    result = []
     afile = mutagen.oggvorbis.OggVorbis(path)
-    return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
+    for item in afile.tags:
+        tag = _map_tag(item[0], warn)
+        result.append(TagValue(tag, '<BINARY DATA>' if tag == u'EmbeddedImage' else item[1]))
+
+    return result
+    #return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
 
 # --------------------------------------------------------------------------------------------------
 def _read_flac(path, warn):
     """
     Read the existing tags from a flac file, and return a list of TagValue named tuples.
     """
+    # Ordinarily, FLAC stored embedded images in a separate block form the tags.  However, since
+    # they do use vcomment tags, we'll check for the same as used in ogg vorbis.
+    result = []
     afile = mutagen.flac.FLAC(path)
-    return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
+    for item in afile.tags:
+        tag = _map_tag(item[0], warn)
+        result.append(TagValue(tag, '<BINARY DATA>' if tag == u'EmbeddedImage' else item[1]))
+
+    return result
+    #return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
 
 # --------------------------------------------------------------------------------------------------
 def _read_mp3(path, warn):
@@ -222,6 +250,7 @@ def _read_m4a(path, warn):
     for name, key in tagmaps.mp4_map.items():
         mutagen.easymp4.EasyMP4Tags.RegisterFreeformKey(key, name)
 
+    # Note, embedded images are not stored in tags.
     result = []
     afile = mutagen.easymp4.EasyMP4(path)
     for key, values in afile.iteritems():

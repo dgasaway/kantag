@@ -64,6 +64,7 @@ cannonical_tags = frozenset([
     u'DiscNumber',
     u'DiscSubtitle',
     u'DJMixer',
+    u'EmbeddedImage',
     u'Engineer',
     u'Genre',
     u'ISRC',
@@ -192,7 +193,8 @@ id3_read_map = {
     u'TXXX:replaygain_album_gain': u'replaygain_album_gain',
     u'TXXX:replaygain_track_peak': u'replaygain_track_peak',
     u'TXXX:replaygain_track_gain': u'replaygain_track_gain',
-    u'TXXX:Acoustid Id': u'acoustid_id'
+    u'TXXX:Acoustid Id': u'acoustid_id',
+    u'APIC': u'EmbeddedImage'
     }
 
 """ Map non-ID3 tags from, e.g., Picard to cannonical names. """
@@ -201,7 +203,8 @@ general_read_map = {
     u'remixer': u'Arranger',
     u'djmixer': u'Arranger',
     u'disctotal': u'TotalDiscs',
-    u'tracktotal': u'TotalTracks'
+    u'tracktotal': u'TotalTracks',
+    u'metadata_block_picture': u'EmbeddedImage'
     }
 
 """ Map TIPL involvements to kantag name. """
