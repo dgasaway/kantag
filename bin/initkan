@@ -47,9 +47,9 @@ _disc_tags = frozenset([
     u'PerformerSort', u'Title', u'Version', u'Work', u'Writer', u'WriterSort'
     ])
 _track_tags = frozenset([
-    u'Arranger', u'ArrangerSort', u'Artist', u'ArtistSort', u'Comment', u'Composer',
-    u'ComposerSort', u'Conductor', u'ConductorSort', u'CoverNumber', u'Genre', u'Lyricist',
-    u'LyricistSort', u'Part', u'Performer', u'PerformerSort', u'Title', u'TrackNumber',
+    u'Arranger', u'ArrangerSort', u'Artist', u'ArtistSort', u'Artists', u'ArtistsSort', u'Comment',
+    u'Composer', u'ComposerSort', u'Conductor', u'ConductorSort', u'CoverNumber', u'Genre',
+    u'Lyricist', u'LyricistSort', u'Part', u'Performer', u'PerformerSort', u'Title', u'TrackNumber',
     u'Version', u'Work', u'Writer', u'WriterSort'
     ])
 _musicbrainz_tags = [

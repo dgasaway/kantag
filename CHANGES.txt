@@ -37,7 +37,7 @@
   * Ported from deprecated python_musicbrainz2 to python_musicbrainzngs.  "NGS"
     was a very big change for MusicBrainz, and some kantag APIs needed to change
     drastically as a result.  The upside is more features, better data, and
-    greatly improved performance in some cases.
+    greatly improved performance in many cases.
   * initkan: Add '--locale' to retrieve locale-specific artist aliases when
     using '--call-musicbrainz'.  May not apply to all artists.
   * initkan: Argument '--parse-disc' now defaults off, as it was designed for
