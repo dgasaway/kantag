@@ -87,3 +87,49 @@ def parse_album_title(full_title):
     else:
         return AlbumTitle(full_title, None, None)
 
+# --------------------------------------------------------------------------------------------------
+def expand_ranges(range_str):
+    """
+    Expand a range string into a list of individual values, e.g., '01-03,05' -> ['01', '02, '03',
+    '05'].  Each number in the string should have the same number of digits.
+    """
+    if not re.match(r'^(\d+(-\d+)?)(,(\d+(-\d+)?))*$', range_str):
+        raise exceptions.TagFileFormatError('Malformed track number range string: ' + range_str)
+
+    result = []
+    for item in range_str.split(','):
+        match = re.match(r'(?P<start>\d+)-(?P<end>\d+)', item)
+        if match:
+            # Store the length of the start value so we can pad all values to
+            # this length.
+            item_len = len(match.group('start'))
+
+            # Loop through the range, and add add each item to the list.
+            start = int(match.group('start'))
+            end = int(match.group('end'))
+            for i in range(start, end+1):
+                result.append(str(i).zfill(item_len))
+        else:
+            result.append(item)
+
+    return result
+
+# --------------------------------------------------------------------------------------------------
+def condense_ranges(nums):
+    """
+    Given a list of numeric strings, sort and condense consecutive ranges into a range string,
+    e.g., ['01', '02', '03', '05'] -> '01-03,05'.
+    """
+    # 'base' is the index storing the low value of a range.
+    base = 0
+    ranges = []
+    nums = sorted([num for num in nums if not num is None])
+    for idx in range(len(nums)):
+        # If last index, or there is a gap before the next value, then output a range.
+        if (idx == len(nums) - 1) or (int(nums[idx + 1]) - int(nums[idx]) > 1):
+            ranges.append(('' if idx == base else str(nums[base]) + '-') + str(nums[idx]))
+            # Next value will start the next range.
+            base = idx + 1
+
+    return ','.join(ranges)
+

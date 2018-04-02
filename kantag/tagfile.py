@@ -15,6 +15,7 @@
 import sys
 import re
 import exceptions
+import util
 from listdict import ListDict
 from tagset import TagSet
 from tagstores import Release, Disc, Track
@@ -115,33 +116,6 @@ class TagLine(object):
         self._warn = value
 
     # ----------------------------------------------------------------------------------------------
-    def _expand_range(self, range_str):
-        """
-        Expand a range string (e.g., '101-103,105,107-108') into a list of individual values.  Each
-        number in the string should have the same number of digits.
-        """
-        if not re.match(r'^(\d+(-\d+)?)(,(\d+(-\d+)?))*$', range_str):
-            raise exceptions.TagFileFormatError('Malformed track number range string: ' + range_str)
-
-        result = []
-        for item in range_str.split(','):
-            match = re.match(r'(?P<start>\d+)-(?P<end>\d+)', item)
-            if match:
-                # Store the length of the start value so we can pad all values to
-                # this length.
-                item_len = len(match.group('start'))
-
-                # Loop through the range, and add add each item to the list.
-                start = int(match.group('start'))
-                end = int(match.group('end'))
-                for i in range(start, end+1):
-                    result.append(str(i).zfill(item_len))
-            else:
-                result.append(item)
-
-        return result
-
-    # ----------------------------------------------------------------------------------------------
     def _parse(self, line):
         """
         Parse a kantag line into a TagLine.
@@ -181,7 +155,7 @@ class TagLine(object):
                     'Malformed disc/track tag: ' + line.encode('utf-8'))
 
             self.line_type = match.group('type')
-            self._applies_to = self._expand_range(match.group('range'))
+            self._applies_to = util.expand_ranges(match.group('range'))
             self.tag = match.group('tagname')
             self._value = match.group('tagvalue')
 
@@ -332,7 +306,7 @@ class TagFileBuilder(object):
                 for value in entity.tags[key]:
                     values.append_unique(value, entity)
         return values
-
+    
     # ----------------------------------------------------------------------------------------------
     def _get_number_str(self, entities, parent=None):
         """
@@ -355,7 +329,10 @@ class TagFileBuilder(object):
                     nums.append('%s' % entity.number.zfill(2))
             else:
                 raise exceptions.TaggingError('Unexpected entity type: ' + str(type(entity)))
-        return ','.join(sorted(list(set(nums))))
+
+        # Condense consecutive numbers into ranges.  Note that values are strings with leading
+        # zeros.
+        return util.condense_ranges(nums)
 
     # ----------------------------------------------------------------------------------------------
     def _add_value(self, entity, num, tag, value):
