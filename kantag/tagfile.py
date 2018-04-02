@@ -15,6 +15,7 @@
 import sys
 import re
 import exceptions
+from listdict import ListDict
 from tagset import TagSet
 from tagstores import Release, Disc, Track
 from tagmaps import cannonical_tags
@@ -320,30 +321,81 @@ class TagFileBuilder(object):
         self._warn = value
 
     # ----------------------------------------------------------------------------------------------
-    def add_value(self, entity, tag, value, parent=None):
+    def _get_value_entity_dict(self, entities, key):
         """
-        Add a TagLine built from a TagStore entity and tag values.
+        Builds a dictionary keyed by the values of 'key' in all 'entities', where the value at each
+        key is a list of entities with that value.  Result is a ListDict instance.
+        """
+        values = ListDict()
+        for entity in entities:
+            if key in entity.tags:
+                for value in entity.tags[key]:
+                    values.append_unique(value, entity)
+        return values
+
+    # ----------------------------------------------------------------------------------------------
+    def _get_number_str(self, entities, parent=None):
+        """
+        Builds a number identifier for a TagStore entity or list of TagStore entities.  If a
+        'entities' is a list, all items should be of the same type.
+        """
+        if not isinstance(entities, list):
+            entities = [entities]
+        
+        nums = []
+        for entity in entities:
+            if isinstance(entity, Release):
+                pass
+            elif isinstance(entity, Disc):
+                nums.append('%s' % entity.number)
+            elif isinstance(entity, Track):
+                if parent is not None and parent.number is not None:
+                    nums.append('%s%s' % (parent.number, entity.number.zfill(2)))
+                else:
+                    nums.append('%s' % entity.number.zfill(2))
+            else:
+                raise exceptions.TaggingError('Unexpected entity type: ' + str(type(entity)))
+        return ','.join(sorted(list(set(nums))))
+
+    # ----------------------------------------------------------------------------------------------
+    def _add_value(self, entity, num, tag, value):
+        """
+        Add a TagLine built from a TagStore entity, a number identifier, a tag, and a value.
         """
         if isinstance(entity, Release):
-            l = TagLine(None, 'a', None, tag, value, self.warn)
+            l = TagLine(None, 'a', num, tag, value, self.warn)
         elif isinstance(entity, Disc):
-            l = TagLine(None, 'd', '%s' % entity.number, tag, value, self.warn)
+            l = TagLine(None, 'd', num, tag, value, self.warn)
         elif isinstance(entity, Track):
-            if parent is not None and parent.number is not None:
-                l = TagLine(None, 't', '%s%s' % (parent.number, entity.number.zfill(2)), tag, value,
-                    self.warn)
-            else:
-                l = TagLine(None, 't', '%s' % entity.number.zfill(2), tag, value, self.warn)
+            l = TagLine(None, 't', num, tag, value, self.warn)
         else:
-            raise exceptions.TaggingError('Unexpected entity type: ' + type(entity))
+            raise exceptions.TaggingError('Unexpected entity type: ' + str(type(entity)))
         self._file.lines.append(l)
+
+    # ----------------------------------------------------------------------------------------------
+    def add_value(self, entity, tag, value, parent=None):
+        """
+        Add a TagLine built from a TagStore entity or list of TagStore entities, a tag, and a value.
+        If 'entity' is a list, all items should be of the same type.
+        """
+        num = self._get_number_str(entity, parent)
+        self._add_value(entity[0] if isinstance(entity, list) else entity, num, tag, value)
 
     # ----------------------------------------------------------------------------------------------
     def add_values(self, entity, key, parent=None):
         """
-        Add a TagLine built from a TagStore entity and its stored tag values for the key.
+        Add TagLines built from tag values for a given key stored in a TagStore entity or list of
+        TagStore entities.  If 'entity' is a list, all items should be of the same type.
         """
-        if key in entity.tags:
+        if isinstance(entity, list):
+            # First, build a dictionary that has the entities for each value.
+            ved = self._get_value_entity_dict(entity, key);
+            # Then sort them by the condensed number list.
+            sorted_values = sorted(ved, key=lambda value: self._get_number_str(ved[value], parent))
+            # Now output them in order.
+            for value in sorted_values:
+                self.add_value(ved[value], key, value, parent)
+        elif key in entity.tags:
             for value in entity.tags[key]:
                 self.add_value(entity, key, value, parent)
 

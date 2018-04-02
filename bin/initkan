@@ -127,7 +127,7 @@ def main():
     group.add_argument('--keep-common',
         help=argparse.SUPPRESS,
         action=ToggleAction, choices=['y', 'n'], default=False)
-    # 
+    # Set musicbrainzngs API format.  DEBUG USE ONLY.
     group.add_argument('--api-format',
         help=argparse.SUPPRESS,
         action='store', choices=['xml', 'json'], default='json')
@@ -401,9 +401,10 @@ def add_structured(builder, rel):
     if args.artist_block and not rel.is_single_artist:
         builder.add_comment('Artists')
         for disc in rel.discs:
+            # Add disc-level artists.
             add_artists(builder, disc)
-            for track in disc.tracks:
-                add_artists(builder, track, disc)
+            # Add condensed track-level artists.
+            add_artists(builder, disc.tracks, disc)
         builder.add_blank()
 
     # Composer/arranger/lyicist block.
@@ -420,9 +421,10 @@ def add_structured(builder, rel):
     # Print disc and track composers in this block if requested.
     if args.artist_block:
         for disc in rel.discs:
+            # Add disc-level composers.
             add_composers(builder, disc)
-            for track in disc.tracks:
-                add_composers(builder, track, disc)
+            # Add condensed track-level composers.
+            add_composers(builder, disc.tracks, disc)
     builder.add_blank()
 
     # Performer block.
@@ -432,9 +434,10 @@ def add_structured(builder, rel):
     # Print disc and track performers from tracks in this block if requested.
     if args.artist_block:
         for disc in rel.discs:
+            # Add disc-level performers.
             add_performers(builder, disc)
-            for track in disc.tracks:
-                add_performers(builder, track, disc)
+            # Add condensed track-level performers.
+            add_performers(builder, disc.tracks, disc)
     builder.add_blank()
 
     # Print works in a work block if requested.
@@ -443,9 +446,10 @@ def add_structured(builder, rel):
         builder.add_values(rel, 'Work')
         builder.add_values(rel, 'Title')
         for disc in rel.discs:
+            # Add disc-level works.
             builder.add_values(disc, 'Work')
-            for track in disc.tracks:
-                builder.add_values(track, 'Work', disc)
+            # Add condensed track-level works.
+            builder.add_values(disc.tracks, 'Work', disc)
         builder.add_values(rel, 'Part') # part shouldn't ever be at this level, though
         builder.add_blank()
 

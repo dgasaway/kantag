@@ -47,6 +47,9 @@
     'AritstsSort' tags for tracks.
   * initkan: Add '--ascii-punctuation' argument to support translation of
     non-ascii punction in titles (release title, track title, work title, etc.)
-    with ascii equivalents.  Code borrowed from MusicBrainz picard.  Enabled by
+    with ascii equivalents.  Code borrowed from MusicBrainz Picard.  Enabled by
     default.
   * initkan/showkan: No longer dump large blocks of data for embedded images.
+  * initkan: Condense items in the artist and work blocks, such that tracks
+    with the same tag/value will output with a single multi-track line instead
+    of one line for each track.
