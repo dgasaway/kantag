@@ -21,27 +21,95 @@ import musicbrainzngs as ngs
 from kantag._version import __version__
 
 # Globals
+""" Maps musicbrainz relationship UUIDs to cannonical tags. """
 _mbz_reltype_map = {
-    'arranger'            : u'Arranger',
-    'composer'            : u'Composer',
-    'conductor'           : u'Conductor',
-    'chorus master'       : u'Conductor',
-    'instrument'          : u'Performer',
-    'instrument arranger' : u'Arranger',
-    'lyricist'            : u'Lyricist',
-    'librettist'          : u'Lyricist',
-    'orchestrator'        : u'Arranger',
-    'performer'           : u'Performer',
-    'performing orchestra': u'Performer',
-    'programming'         : u'Performer',
-    'revised by'          : u'Arranger',
-    'reconstructed by'    : u'Arranger',
-    'remixer'             : u'Arranger',
-    'translator'          : u'Lyricist',
-    'vocal'               : u'Performer',
-    'vocal arranger'      : u'Arranger',
-    'writer'              : u'Writer'
+    # Work 'composer'
+    'd59d99ea-23d4-4a80-b066-edca32ee158f' : u'Composer',
+    # Work 'librettist'
+    '7474ab81-486f-40b5-8685-3a4f8ea624cb' : u'Lyricist',
+    # Work 'lyricist'
+    '3e48faba-ec01-47fd-8e89-30e81161661c' : u'Lyricist',
+    # Work 'translator'
+    'da6c5d8a-ce13-474d-9375-61feb29039a5' : u'Lyricist',
+    # Work 'arranger'
+    'd3fd781c-5894-47e2-8c12-86cc0e2c8d08' : u'Arranger',
+    # Work 'instrument arranger'
+    '0084e70a-873e-4f7f-b3ff-635b9e863dae' : u'Arranger',
+    # Work 'vocal arranger'
+    '6a88b92b-8fb5-41b3-aa1f-169ee7e05ed6' : u'Arranger',
+    # Work 'orchestrator'
+    '0a1771e1-8639-4740-8a43-bdafc050c3da' : u'Arranger',
+    # Work 'revised by'
+    'eeb9c319-9fde-4313-b76d-29db1576aad8' : u'Arranger',
+    # Work 'reconstructed by'
+    'cb887d1b-5267-4f3d-badb-5b3fba7349f6' : u'Arranger',
+    # Work 'writer'
+    'a255bca1-b157-4518-9108-7b147dc3fc68' : u'Writer',
+    
+    # Recording 'arranger'
+    '22661fb8-cdb7-4f67-8385-b2a8be6c9f0d' : u'Arranger',
+    # Recording 'instrument arranger'
+    '4820daa1-98d6-4f8b-aa4b-6895c5b79b27' : u'Arranger',
+    # Recording 'vocal arranger'
+    '8a2799e8-a7e2-41ce-a7da-b5f520687216' : u'Arranger',
+    # Recording 'orchestrator'
+    '38fa7405-f9a5-48cb-827a-8ac601933ba0' : u'Arranger',
+    # Recording 'performer'
+    '628a9658-f54c-4142-b0c0-95f031b544da' : u'Performer',
+    # Recording 'instrument'
+    '59054b12-01ac-43ee-a618-285fd397e461' : u'Performer',
+    # Recording 'vocal'
+    '0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa' : u'Performer',
+    # Recording 'performing orchestra'
+    '3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb' : u'Performer',
+    # Recording 'programming'
+    '36c50022-44e0-488d-994b-33f11d20301e' : u'Performer',
+    # Recording 'conductor'
+    '234670ce-5f22-4fd0-921b-ef1662695c5d' : u'Conductor',
+    # Recording 'chorus master'
+    '45115945-597e-4cb9-852f-4e6ba583fcc8' : u'Conductor',
+    # Recording 'remixer'
+    '7950be4d-13a3-48e7-906b-5af562e39544' : u'Arranger',    
+    
+    # Release 'composer'
+    '01ce32b0-d873-4baa-8025-714b45c0c754' : u'Composer',
+    # Release 'librettist'
+    'dd182715-ca2b-4e4b-80b1-d21742fda0dc' : u'Lyricist',
+    # Release 'lyricist'
+    'a2af367a-b040-46f8-af21-310f92dfe97b' : u'Lyricist',
+    # Release 'translator'
+    '4db37fec-eb67-45d3-b4fa-148a68135fbb' : u'Lyricist',
+    # Release 'arranger'
+    '34d5334e-a4c8-4b65-a5f8-bbcc9c81d13d' : u'Arranger',
+    # Release 'instrument arranger'
+    '18f159bb-44f0-4aef-b198-a4736ad9b659' : u'Arranger',
+    # Release 'vocal arranger'
+    'd7d9128d-e676-4d8f-a353-f48a55a98501' : u'Arranger',
+    # Release 'orchestrator'
+    '04e1f0b6-ef40-4168-ba25-42a87729fe09' : u'Arranger',
+    # Release 'writer'
+    'ca7a474a-a1cd-4431-9230-56a17f553090' : u'Writer',
+    # Release 'performer'
+    '888a2320-52e4-4fe8-a8a0-7a4c8dfde167' : u'Performer',
+    # Release 'instrument'
+    '67555849-61e5-455b-96e3-29733f0115f5' : u'Performer',
+    # Release 'vocal'
+    'eb10f8a0-0f4c-4dce-aa47-87bcb2bc42f3' : u'Performer',
+    # Release 'performing orchestra'
+    '23a2e2e7-81ca-4865-8d05-2243848a77bf' : u'Performer',
+    # Release 'programming'
+    '617063ad-dbb5-4877-9ba0-ba2b9198d5a7' : u'Performer',
+    # Release 'conductor'
+    '9ae9e4d0-f26b-42fb-ab5c-1149a47cf83b' : u'Conductor',
+    # Release 'chorus master'
+    'b9129850-73ec-4af5-803c-1c12b97e25d2' : u'Conductor',
+    # Release 'remixer'
+    'ac6a86db-f757-4815-a07e-744428d2382b' : u'Arranger',    
     }
+""" Musicbrainz relationship UUID for work-work 'parts' relationship. """
+_mbz_parts_id = 'ca8d3642-ce5f-49f8-91f2-125d72524e6a'
+""" Musicbrainz relationsip UUID for recording-work 'performance' relationship. """
+_mbz_performance_id = 'a3005666-a872-32c3-ad06-98af558e99b0'
 
 """ Representation of an artist relation. """
 Relation = collections.namedtuple('Relation', 'type, name, sortname')
@@ -73,7 +141,6 @@ def get_release_by_id(releaseid):
     incs = ['artists', 'artist-credits', 'artist-rels', 'recordings', 'recording-level-rels',
             'work-rels', 'work-level-rels', 'release-groups', 'labels', 'aliases']
     result = ngs.get_release_by_id(releaseid, includes=incs)
-    print >> sys.stderr, "api format: " + _format
     if _format == 'json':
         return result
     else:
@@ -126,7 +193,7 @@ def map_relation(relation, locale='en'):
     """
     Map a musicbrainz artist relation to a tag name.  The result is a Relation named tuple.
     """
-    rel_type = relation['type']
+    rel_type = relation['type-id']
     if rel_type in _mbz_reltype_map:
         artist = get_artist_primary_alias(relation['artist'], locale)
         return Relation(_mbz_reltype_map[rel_type], artist.name, artist.sortname)
@@ -184,8 +251,9 @@ def get_work_partof_works(work):
     result = []
     if key in work:
         for rel in work[key]:
-            if rel['type'] == 'parts' and 'direction' in rel and rel['direction'] == 'backward':
-                result.append(rel['work'])
+            if rel['type-id'] == _mbz_parts_id:
+                if 'direction' in rel and rel['direction'] == 'backward':
+                    result.append(rel['work'])
     return result
 
 # --------------------------------------------------------------------------------------------------
@@ -309,6 +377,6 @@ def get_recording_works(recording):
     key = 'relations' if _format == 'json' else 'work-relation-list'
     if key in recording:
         rels = recording[key]
-        return [r['work'] for r in rels if r['type'] == 'performance']
+        return [r['work'] for r in rels if r['type-id'] == _mbz_performance_id]
     else:
         return []
