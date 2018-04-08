@@ -53,3 +53,4 @@
   * initkan: Condense items in the artist and work blocks, such that tracks
     with the same tag/value will output with a single multi-track line instead
     of one line for each track.
+  * Use MusicBrainz recording disambiguation as the Version tag, if available.

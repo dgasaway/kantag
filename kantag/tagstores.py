@@ -437,6 +437,8 @@ class TrackBuilder(_TagStoreBuilder):
         tags[u'RecordingTitle'] = [unicode(mb_recording['title'])]
         if (not u'Title' in tags or apply_title) and 'title' in mb_recording:
             tags[u'Title'] = [unicode(mb_recording['title'])]
+        if 'disambiguation' in mb_recording and mb_recording['disambiguation'] != '':
+            tags.append_unique(u'Version', mb_recording['disambiguation'])
 
         # Add the artist relations using sortnames.
         locale = self._options.locale
