@@ -451,15 +451,17 @@ class TrackBuilder(_TagStoreBuilder):
         #mb_work = mb.get_work_by_id(mb_work['id']);
         if apply_title:
             title = unicode(mb_work['title'])
-            tags[u'Work'] = [title]
             if self._options.parse_title:
                 parsed = util.parse_track_title(title)
                 if parsed.parts is not None:
                     if parsed.work is not None:
-                        #tags.append_unique(u'Work', parsed.work)
-                        tags[u'Work'] = [parsed.work]
+                        tags.append_unique(u'Work', parsed.work)
+                        #tags[u'Work'] = [parsed.work]
                     for part in parsed.parts:
                         tags.append_unique(u'Part', part)
+            else:
+                tags[u'Work'] = tags.append_unique(u'Work', title)
+
 
         # Add the artist relations using sortnames.
         rels = mb.get_work_artist_relations(mb_work, recurse, self._options.locale)
