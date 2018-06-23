@@ -33,7 +33,7 @@
   * Add MP4 file support.
   * Add support for ID3 TXXX:original date.
 
-<tbd>, kantag v1.2.0
+2018-06-22, kantag v1.2.0
   * Ported from deprecated python_musicbrainz2 to python_musicbrainzngs.  "NGS"
     was a very big change for MusicBrainz, and some kantag APIs needed to change
     drastically as a result.  The upside is more features, better data, and

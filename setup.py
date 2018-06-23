@@ -38,7 +38,7 @@ setup(
     install_requires=[
         'mutagen >= 1.20',
     ],
-    extras_requires={
+    extras_require={
         'MusicBrainz': ['musicbrainzngs >= 0.6'],
     },
     keywords='audio music metadata tags',
