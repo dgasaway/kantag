@@ -43,6 +43,7 @@ cannonical_tags = frozenset([
     u'AlbumArtistSort',
     u'AlbumArtists',
     u'AlbumArtistsSort',
+    u'AlbumVersion',
     u'Arranger',
     u'ArrangerSort',
     u'Artist',
