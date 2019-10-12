@@ -117,8 +117,8 @@ def _break_frame(frame, ftype, warn):
     if ftype.startswith('APIC:'):
         ftype = 'APIC'
 
-    if ftype in tagmaps.id3_read_map:
-        tag = tagmaps.id3_read_map[ftype]
+    if ftype.upper() in tagmaps.id3_read_map:
+        tag = tagmaps.id3_read_map[ftype.upper()]
 
         # Examine the type of frame to pull out the values correctly, and flatten where necessary.
         if isinstance(frame, mutagen.id3.TextFrame):
