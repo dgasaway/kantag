@@ -244,7 +244,8 @@ id3_write_map = {
     u'replaygain_album_peak': u'TXXX:replaygain_album_peak',
     u'replaygain_album_gain': u'TXXX:replaygain_album_gain',
     u'replaygain_track_peak': u'TXXX:replaygain_track_peak',
-    u'replaygain_track_gain': u'TXXX:replaygain_track_gain'
+    u'replaygain_track_gain': u'TXXX:replaygain_track_gain',
+    u'acoustid_id': u'TXXX:ACOUSTID ID'
     # Anything not explicitly listed maps to TXXX:<WHATEVER>
     }
 
