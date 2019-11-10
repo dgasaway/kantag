@@ -240,7 +240,7 @@ id3_write_map = {
     u'musicbrainz_releasegroupid': u'TXXX:MusicBrainz Release Group Id',
     u'musicbrainz_releasetrackid': u'TXXX:MusicBrainz Release Track Id',
     u'musicbrainz_trackid': u'UFID:http://musicbrainz.org',
-    u'musicbrainz_workid': u'TXXX: MusicBrainz Work Id',
+    u'musicbrainz_workid': u'TXXX:MusicBrainz Work Id',
     u'replaygain_album_peak': u'TXXX:replaygain_album_peak',
     u'replaygain_album_gain': u'TXXX:replaygain_album_gain',
     u'replaygain_track_peak': u'TXXX:replaygain_track_peak',
