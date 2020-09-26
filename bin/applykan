@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # applykan.py - kantag tool for writing text metadata to audio files.
 # Copyright (C) 2018 David Gasaway
@@ -147,8 +147,8 @@ def main():
     args = parser.parse_args()
 
     if args.verbose >= 3:
-        print '<Arguments>'
-        print pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n'
+        print('<Arguments>')
+        print(pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n')
 
     # Check for some files to build tags for.
     if args.tag_file != '-' and not os.path.exists(args.tag_file):
@@ -161,8 +161,7 @@ def main():
     try:
         process_files(args)
     except TaggingError as e:
-        print >> sys.stderr, 'An exception occurred:\n' + \
-            ';'.join(e.args).encode('utf-8')
+        print('An exception occurred:\n' + ';'.join(e.args).encode('utf-8'), file=sys.stderr)
         exit(2)
 
 # --------------------------------------------------------------------------------------------------
@@ -194,11 +193,11 @@ def write_tags_to_file(tags, filename, args):
     """
     # Display tags
     if args.verbose == 2:
-        for tag, lst in tags.iteritems():
+        for tag, lst in tags.items():
             for value in lst:
-                print ('\t' + tag + '=' + value).encode('utf-8')
+                print(('\t' + tag + '=' + value).encode('utf-8'))
     elif args.verbose >= 3:
-        print pprint.PrettyPrinter(indent=2).pformat(tags)
+        print(pprint.PrettyPrinter(indent=2).pformat(tags))
 
     # Write the tags to file.
     if not args.pretend:
@@ -229,14 +228,14 @@ def process_file(tagf, filename, args):
     tag file.
     """
     if args.verbose >= 1:
-        print filename.encode('utf-8')
+        print(filename.encode('utf-8'))
 
     # Use path and regex to get the disc/track number of the file.
     path = os.path.abspath(filename)
     (discnum, tracknum) = get_disc_track(args.path_regex, path)
     if args.warn and tracknum is None:
-        print >> sys.stderr, \
-            'warning: unable to determine track number from filename; file will be skipped'
+        print('warning: unable to determine track number from filename; file will be skipped',
+            file=sys.stderr)
         return
 
     # Get the tags that apply to the file.
@@ -255,13 +254,13 @@ def process_file(tagf, filename, args):
         # Use a set difference to find the missing tags.
         missing_tags = _minimal_tags - set(tags.keys())
         if len(missing_tags) > 0:
-            print >> sys.stderr, 'warning: file missing minimal tags: ' + \
-                ', '.join(missing_tags)
+            print('warning: file missing minimal tags: ' + ', '.join(missing_tags),
+                file=sys.stderr)
 
     # Check for other irregularities.
     if args.warn:
         if 'Work' in tags and not 'Composer' in tags:
-            print >> sys.stderr, 'warning: work without composer'
+            print('warning: work without composer', file=sys.stderr)
 
     # Finalize.
     write_tags_to_file(tags, filename, args)
@@ -282,8 +281,8 @@ def process_files(args):
     tagf = TagFileBuilder(reader=reader, warn=args.warn and args.warn_unrecognized).tags
 
     if args.verbose >= 3:
-        print '<TagFile>'
-        print tagf.pprint(True).encode('utf-8')
+        print('<TagFile>')
+        print(tagf.pprint(True).encode('utf-8'))
 
     if args.sort_map is not None:
         tagf.apply_map(args.sort_map)
@@ -294,8 +293,8 @@ def process_files(args):
     # Search and warn about unused tag lines.
     if args.warn and args.warn_unused:
         for source_line in [line.source_line for line in tagf.lines if not line.used]:
-            print >> sys.stderr, 'warning: unused tag line:'
-            print >> sys.stderr, source_line.encode('utf-8')
+            print('warning: unused tag line:', file=sys.stderr)
+            print(source_line.encode('utf-8'), file=sys.stderr)
 
 # --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":

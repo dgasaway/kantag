@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # initkan.py - kantag tool for generation of text metadata.
 # Copyright (C) 2018 David Gasaway
@@ -170,8 +170,8 @@ def main():
     global args
     args = parser.parse_args()
     if args.verbose >= 2:
-        print >> sys.stderr, '<Arguments>'
-        print >> sys.stderr, pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n'
+        print('<Arguments>', file=sys.stderr)
+        print(pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n', file=sys.stderr)
 
     # Check for presence of musicbrainsngs.
     try:
@@ -189,8 +189,7 @@ def main():
     try:
         process_files()
     except TaggingError as e:
-        print >> sys.stderr, 'An exception occurred:\n' + \
-            ';'.join(e.args).encode('utf-8')
+        print('An exception occurred:\n' + ';'.join(e.args).encode('utf-8'), file=sys.stderr)
         exit(2)
 
 # --------------------------------------------------------------------------------------------------
@@ -275,7 +274,7 @@ def add_unsupported(builder, entity, parent=None):
         raise TaggingError('unexpected entity type')
 
     found = False
-    for key in entity.tags.iterkeys():
+    for key in entity.tags.keys():
         if key not in l and key not in _musicbrainz_tags and key not in _replaygain_tags:
             if not found:
                 builder.add_blank()
@@ -321,8 +320,8 @@ def add_structured(builder, rel):
     Add standard tag lines from a Release tagstore to a TagFileBuilder.
     """
     if args.verbose >= 2:
-        print >> sys.stderr, '\n<Release entity>'
-        print >> sys.stderr, rel.pprint().encode('utf-8')
+        print('\n<Release entity>', file=sys.stderr)
+        print(rel.pprint().encode('utf-8'), file=sys.stderr)
 
     builder.add_comment('Album / common track info')
     # The release may have an albumartist even if it's a single-artist release.
@@ -537,7 +536,7 @@ def add_tagset(builder, entity, parent=None):
     """
     Add all tags from a TagStore to a TagFileBuilder.
     """
-    for tag in entity.tags.iterkeys():
+    for tag in entity.tags.keys():
         builder.add_values(entity, tag, parent)
 
 # --------------------------------------------------------------------------------------------------
@@ -581,7 +580,7 @@ def process_files():
 
     # Write out from the builder.
     if args.output == '-':
-        print str(builder.tags).encode('utf-8')
+        print(str(builder.tags).encode('utf-8'))
     else:
         with io.open(args.output, mode='wt', encoding='utf-8') as f:
             f.write(str(builder.tags))

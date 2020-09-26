@@ -17,10 +17,10 @@ import sys
 import os.path
 import warnings
 import pprint
-from tagset import TagSet
-import audiofile, util, textencoding
+from .tagset import TagSet
+from . import audiofile, util, textencoding
 try:
-    import musicbrainz as mb
+    from . import musicbrainz as mb
 except ImportError:
     mb = None
 
@@ -221,7 +221,8 @@ class _TagStoreBuilder(object):
         """
         Apply a list musicbrainz Relation instances to the given TagSet.
         """
-        map(self.apply_musicbrainz_relation, relations)
+        for rel in relations:
+            self.apply_musicbrainz_relation(relation)
 
     # ----------------------------------------------------------------------------------------------
     def _set_artist_statuses(self, common_values, various):
@@ -661,7 +662,7 @@ class ReleaseBuilder(_TagStoreBuilder):
 
         for filename in filenames:
             if self._options.verbose >= 1:
-                print >> sys.stderr, filename
+                print(filename, file=sys.stderr)
 
             # Fetch the tags that are stored in the file/path.
             track = self._get_track(filename)

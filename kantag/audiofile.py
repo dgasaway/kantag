@@ -18,9 +18,9 @@ import mutagen.id3
 import mutagen.oggvorbis
 import mutagen.flac
 import mutagen.easymp4
-import tagmaps, exceptions
-from util import TagValue
-from tagset import TagSet
+from . import tagmaps, exceptions
+from .util import TagValue
+from .tagset import TagSet
 
 # --------------------------------------------------------------------------------------------------
 def _map_tag(tag, warn):
@@ -33,7 +33,7 @@ def _map_tag(tag, warn):
     l = [t for t in tagmaps.cannonical_tags if t.lower() == work]
     if len(l) == 0:
         if warn:
-            print >> sys.stderr, 'warning: unrecognized tag: ' + tag
+            print('warning: unrecognized tag: ' + tag, file=sys.stderr)
         return tag
     else:
         return l[0]
@@ -137,7 +137,7 @@ def _break_frame(frame, ftype, warn):
                 )
     else:
         if warn:
-            print >> sys.stderr, 'warning: unknown ID3 frame type: ' + ftype
+            print('warning: unknown ID3 frame type: ' + ftype, file=sys.stderr)
         return [TagValue(ftype, repr(frame))]
 
 # --------------------------------------------------------------------------------------------------
@@ -236,7 +236,7 @@ def _read_mp3(path, warn):
     result = []
     afile = mutagen.id3.ID3(path)
     afile.update_to_v24()
-    for ftype, frame in afile.iteritems():
+    for ftype, frame in afile.items():
         result.extend(_break_frame(frame, ftype, warn))
 
     return result
@@ -253,7 +253,7 @@ def _read_m4a(path, warn):
     # Note, embedded images are not stored in tags.
     result = []
     afile = mutagen.easymp4.EasyMP4(path)
-    for key, values in afile.iteritems():
+    for key, values in afile.items():
         result.extend([TagValue(_map_tag(key, warn), v) for v in values])
     return result
 
@@ -288,7 +288,7 @@ def _write_ogg(path, tagset):
     """
     afile = mutagen.oggvorbis.OggVorbis(path)
     afile.clear()
-    for tag, values in tagset.iteritems():
+    for tag, values in tagset.items():
         afile[tag.lower()] = values
     afile.save()
 
@@ -299,7 +299,7 @@ def _write_flac(path, tagset):
     """
     afile = mutagen.flac.FLAC(path)
     afile.clear()
-    for tag, values in tagset.iteritems():
+    for tag, values in tagset.items():
         afile[tag.lower()] = values
     afile.save()
 
@@ -314,7 +314,7 @@ def _write_mp3(path, tagset):
         afile = mutagen.id3.ID3()
 
     afile.clear()
-    for tag, values in tagset.iteritems():
+    for tag, values in tagset.items():
         frame = _build_frame(tag, values)
         if frame is not None:
             afile.add(frame)
@@ -337,7 +337,7 @@ def _write_m4a(path, tagset):
     afile = mutagen.easymp4.EasyMP4(path)
     afile.delete()  # Needed to remove tags not mapped by EasyMP4.
     afile.clear()
-    for tag, values in tagset.iteritems():
+    for tag, values in tagset.items():
         afile[tag.lower()] = values
     afile.save()
 

@@ -96,7 +96,7 @@ _additional_compatibility = {
     "\u3000": " ",  # IDEOGRAPHIC SPACE (from ‹character-fallback›)
     "\u2033": "”",  # DOUBLE PRIME
 }
-_re_additional_compatibility = _re_any(_additional_compatibility.keys())
+_re_additional_compatibility = _re_any(list(_additional_compatibility.keys()))
 
 
 def unicode_simplify_compatibility(string):
@@ -174,7 +174,7 @@ _simplify_punctuation = {
     "\u2986": "))",  # RIGHT WHITE PARENTHESIS
     "\u200B": "",  # Zero Width Space
 }
-_re_simplify_punctuation = _re_any(_simplify_punctuation.keys())
+_re_simplify_punctuation = _re_any(list(_simplify_punctuation.keys()))
 
 
 def unicode_simplify_punctuation(string):

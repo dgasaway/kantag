@@ -118,7 +118,7 @@ class ListDict(dict):
         """
         Add values from a dictionary that are not already in the object.
         """
-        for key, values in dct.iteritems():
+        for key, values in dct.items():
             self.extend_unique(key, values)
 
     # ----------------------------------------------------------------------------------------------
@@ -174,7 +174,7 @@ class ListDict(dict):
         """
         Remove all the values from the dictionary that are present in a second dictionary.
         """
-        for key, values in remove.iteritems():
+        for key, values in remove.items():
             for value in values:
                 self.remove(key, value)
 
@@ -211,7 +211,7 @@ class ListDict(dict):
         """
         result = ListDict()
 
-        for key, values in dicts[0].iteritems():
+        for key, values in dicts[0].items():
             common_values = values[:]
             for dict2 in dicts[1:]:
                 if key in dict2:

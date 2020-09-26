@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # applykan.py - kantag tool for inspecting audio file metadata.
 # Copyright (C) 2018 David Gasaway
@@ -58,8 +58,8 @@ def main():
     args = parser.parse_args()
 
     if args.verbose >= 1:
-        print '<Arguments>'
-        print pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n'
+        print('<Arguments>')
+        print(pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n')
 
     # Check for valid files.
     for audio_file in args.audio_files:
@@ -69,14 +69,13 @@ def main():
     # Write the output.
     try:
         for filename in args.audio_files:
-            print args.filename_format.format(filename).encode('utf-8')
+            print(args.filename_format.format(filename).encode('utf-8'))
             print_tags(filename, args)
             if args.file_trailer != '':
-                print args.file_trailer.encode('utf-8')
+                print(args.file_trailer.encode('utf-8'))
 
     except TaggingError as e:
-        print >> sys.stderr, 'An exception occurred:\n' + \
-            ';'.join(e.args).encode('utf-8')
+        print('An exception occurred:\n' + ';'.join(e.args).encode('utf-8'), file=sys.stderr)
         exit(2)
 
 # --------------------------------------------------------------------------------------------------
@@ -85,7 +84,7 @@ def print_tags(filename, args):
     if args.sort:
         tags.sort(key=lambda item: item.tag)
     for item in tags:
-        print args.tag_format.format(item.tag, item.value).encode('utf-8')
+        print(args.tag_format.format(item.tag, item.value).encode('utf-8'))
 
 # --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":

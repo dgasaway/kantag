@@ -14,12 +14,12 @@
 # see <http://www.gnu.org/licenses>.
 import sys
 import re
-import exceptions
-import util
-from listdict import ListDict
-from tagset import TagSet
-from tagstores import Release, Disc, Track
-from tagmaps import cannonical_tags
+from . import exceptions
+from . import util
+from .listdict import ListDict
+from .tagset import TagSet
+from .tagstores import Release, Disc, Track
+from .tagmaps import cannonical_tags
 
 # --------------------------------------------------------------------------------------------------
 class TagLine(object):
@@ -86,7 +86,7 @@ class TagLine(object):
     def tag(self, value):
         self._tag = value
         if self.warn and value not in cannonical_tags:
-            print >> sys.stderr, 'warning: unrecognized tag: ' + value.encode('utf-8')
+            print('warning: unrecognized tag: ' + value.encode('utf-8'), file=sys.stderr)
 
     # ----------------------------------------------------------------------------------------------
     @property

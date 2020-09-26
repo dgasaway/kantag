@@ -34,9 +34,9 @@ setup(
     license='GNU GPL v2',
     packages=['kantag'],
     scripts=['bin/applykan', 'bin/initkan', 'bin/showkan'],
-    python_requires='~=2.7',
+    python_requires='~=3.7',
     install_requires=[
-        'mutagen >= 1.20',
+        'mutagen >= 1.40',
     ],
     extras_require={
         'MusicBrainz': ['musicbrainzngs >= 0.6'],
@@ -44,9 +44,9 @@ setup(
     keywords='audio music metadata tags',
     classifiers=[
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 2 :: Only',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3 :: Only',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Topic :: Multimedia :: Sound/Audio',
         'Topic :: Software Development :: Libraries :: Python Modules',
