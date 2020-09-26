@@ -68,9 +68,7 @@ def main():
 
     # Write the output.
     try:
-        args.filename_format = unicode(args.filename_format, 'utf-8')
-        args.tag_format = unicode(args.tag_format, 'utf-8')
-        for filename in [f.decode('utf-8') for f in args.audio_files]:
+        for filename in args.audio_files:
             print args.filename_format.format(filename).encode('utf-8')
             print_tags(filename, args)
             if args.file_trailer != '':

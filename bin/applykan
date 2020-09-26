@@ -37,33 +37,33 @@ Set of tag names that will generate a warning if any given file does not contain
 by that name.
 """
 _minimal_tags = frozenset([
-    u'AlbumArtist', u'AlbumArtistSort', u'AlbumArtists', u'AlbumArtistsSort', u'Artist',
-    u'ArtistSort', u'Date', u'LabelId', u'Title', u'Performer', u'PerformerSort', u'TrackNumber',
-    u'musicbrainz_albumartistid', u'musicbrainz_albumid', u'musicbrainz_artistid',
-    u'musicbrainz_trackid',
-    u'replaygain_album_peak', u'replaygain_album_gain',
-    u'replaygain_track_peak', u'replaygain_track_gain'
+    'AlbumArtist', 'AlbumArtistSort', 'AlbumArtists', 'AlbumArtistsSort', 'Artist',
+    'ArtistSort', 'Date', 'LabelId', 'Title', 'Performer', 'PerformerSort', 'TrackNumber',
+    'musicbrainz_albumartistid', 'musicbrainz_albumid', 'musicbrainz_artistid',
+    'musicbrainz_trackid',
+    'replaygain_album_peak', 'replaygain_album_gain',
+    'replaygain_track_peak', 'replaygain_track_gain'
     ])
 """
 Map where sort names are stored in regular artist tags, and no non-sort names are stored.  For
 example, ARTIST=Beatles, The; ARTISTSORT=<undefined>.
 """
 _sort_names_only_map = {
-    u'AlbumArtistSort': u'AlbumArtist',
-    u'ArrangerSort'   : u'Arranger',
-    u'ArtistSort'     : u'Artist',
-    u'ComposerSort'   : u'Composer',
-    u'ConductorSort'  : u'Conductor',
-    u'LyricistSort'   : u'Lyricist',
-    u'PerformerSort'  : u'Performer',
-    u'WriterSort'     : u'Writer',
-    u'AlbumArtist'    : None,
-    u'Arranger'       : None,
-    u'Artist'         : None,
-    u'Composer'       : None,
-    u'Lyricist'       : None,
-    u'Performer'      : None,
-    u'Writer'         : None
+    'AlbumArtistSort': 'AlbumArtist',
+    'ArrangerSort'   : 'Arranger',
+    'ArtistSort'     : 'Artist',
+    'ComposerSort'   : 'Composer',
+    'ConductorSort'  : 'Conductor',
+    'LyricistSort'   : 'Lyricist',
+    'PerformerSort'  : 'Performer',
+    'WriterSort'     : 'Writer',
+    'AlbumArtist'    : None,
+    'Arranger'       : None,
+    'Artist'         : None,
+    'Composer'       : None,
+    'Lyricist'       : None,
+    'Performer'      : None,
+    'Writer'         : None
     }
 
 """
@@ -71,21 +71,21 @@ Map where sort names are stored in regular artist tags, and non-sort names are s
 'nonsort' tags.  For example, ARTIST=Beatles, The; ARTISTNONSORT=The Beatles.
 """
 _sort_and_nonsort_names_map = {
-    u'AlbumArtistSort': u'AlbumArtist',
-    u'ArrangerSort'   : u'Arranger',
-    u'ArtistSort'     : u'Artist',
-    u'ComposerSort'   : u'Composer',
-    u'ConductorSort'  : u'Conductor',
-    u'LyricistSort'   : u'Lyricist',
-    u'PerformerSort'  : u'Performer',
-    u'WriterSort'     : u'Writer',
-    u'AlbumArtist'    : u'AlbumAristNonSort',
-    u'Arranger'       : u'ArrangerNonSort',
-    u'Artist'         : u'ArtistNonSort',
-    u'Composer'       : u'ComposerNonSort',
-    u'Lyricist'       : u'LyricistNonSort',
-    u'Performer'      : u'PerformerNonSort',
-    u'Writer'         : u'WriterNonSort'
+    'AlbumArtistSort': 'AlbumArtist',
+    'ArrangerSort'   : 'Arranger',
+    'ArtistSort'     : 'Artist',
+    'ComposerSort'   : 'Composer',
+    'ConductorSort'  : 'Conductor',
+    'LyricistSort'   : 'Lyricist',
+    'PerformerSort'  : 'Performer',
+    'WriterSort'     : 'Writer',
+    'AlbumArtist'    : 'AlbumAristNonSort',
+    'Arranger'       : 'ArrangerNonSort',
+    'Artist'         : 'ArtistNonSort',
+    'Composer'       : 'ComposerNonSort',
+    'Lyricist'       : 'LyricistNonSort',
+    'Performer'      : 'PerformerNonSort',
+    'Writer'         : 'WriterNonSort'
     }
 
 # --------------------------------------------------------------------------------------------------
@@ -179,12 +179,12 @@ def build_work_part_title(tags):
     Build a title tag from work and part information.
     """
     title = ''
-    if u'Work' in tags:
-        title = title + ' / '.join(tags[u'Work'])
-        if u'Part' in tags:
+    if 'Work' in tags:
+        title = title + ' / '.join(tags['Work'])
+        if 'Part' in tags:
             title = title + ': '
-    if u'Part' in tags:
-        title = title + ' / '.join(tags[u'Part'])
+    if 'Part' in tags:
+        title = title + ' / '.join(tags['Part'])
     return title
 
 # --------------------------------------------------------------------------------------------------
@@ -243,12 +243,12 @@ def process_file(tagf, filename, args):
     tags = tagf.get_matching(discnum, tracknum)
 
     # Add a track number tag.
-    if tracknum is not None and u'TrackNumber' not in tags:
-        tags.append(u'TrackNumber', tracknum.zfill(2))
+    if tracknum is not None and 'TrackNumber' not in tags:
+        tags.append('TrackNumber', tracknum.zfill(2))
 
     # Add a title tag from work and part info if no title present.
-    if args.work_title and u'Title' not in tags and (u'Work' in tags or u'Part' in tags):
-        tags.append(u'Title', build_work_part_title(tags))
+    if args.work_title and 'Title' not in tags and ('Work' in tags or 'Part' in tags):
+        tags.append('Title', build_work_part_title(tags))
 
     # Check for essential tags.
     if args.warn:
@@ -260,7 +260,7 @@ def process_file(tagf, filename, args):
 
     # Check for other irregularities.
     if args.warn:
-        if u'Work' in tags and not u'Composer' in tags:
+        if 'Work' in tags and not 'Composer' in tags:
             print >> sys.stderr, 'warning: work without composer'
 
     # Finalize.

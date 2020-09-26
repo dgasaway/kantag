@@ -160,27 +160,20 @@ class TagLine(object):
             self._value = match.group('tagvalue')
 
     # ----------------------------------------------------------------------------------------------
-    def __unicode__(self):
-        """
-        Build a unicode kantag line from the current state.
-        """
-        if self._line_type is None:
-            return u''
-        elif self._line_type == '#':
-            return u'# %s' % (self._value)
-        elif self._line_type == 'a':
-            return u'a %s=%s' % (self._tag, self._value)
-        elif self._line_type == 'd' or self._line_type == 't':
-            return u'%s %s %s=%s' % (self._line_type, self._applies_to, self._tag, self._value)
-        else:
-            raise exceptions.TagFileFormatError('Unexpected line type: ' + self._line_type)
-
-    # ----------------------------------------------------------------------------------------------
     def __str__(self):
         """
-        Build a UTF-8 encoded kantag line from the current state.
+        Build a kantag line from the current state.
         """
-        return unicode(self).encode('utf-8')
+        if self._line_type is None:
+            return ''
+        elif self._line_type == '#':
+            return '# %s' % (self._value)
+        elif self._line_type == 'a':
+            return 'a %s=%s' % (self._tag, self._value)
+        elif self._line_type == 'd' or self._line_type == 't':
+            return '%s %s %s=%s' % (self._line_type, self._applies_to, self._tag, self._value)
+        else:
+            raise exceptions.TagFileFormatError('Unexpected line type: ' + self._line_type)
 
     # ----------------------------------------------------------------------------------------------
     def pprint(self):
@@ -245,18 +238,11 @@ class TagFile(object):
         return result
 
     # ----------------------------------------------------------------------------------------------
-    def __unicode__(self):
-        """
-        Build unicode kantag lines from the current state.
-        """
-        return ('\n').join([unicode(l) for l in self._lines])
-
-    # ----------------------------------------------------------------------------------------------
     def __str__(self):
         """
-        Build UTF-8 encoded kantag lines from the current state.
+        Build kantag lines from the current state.
         """
-        return unicode(self).encode('utf-8')
+        return ('\n').join([str(l) for l in self._lines])
 
     # ----------------------------------------------------------------------------------------------
     def pprint(self, print_comments=False):

@@ -207,7 +207,7 @@ def _read_ogg(path, warn):
     afile = mutagen.oggvorbis.OggVorbis(path)
     for item in afile.tags:
         tag = _map_tag(item[0], warn)
-        result.append(TagValue(tag, '<BINARY DATA>' if tag == u'EmbeddedImage' else item[1]))
+        result.append(TagValue(tag, '<BINARY DATA>' if tag == 'EmbeddedImage' else item[1]))
 
     return result
     #return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
@@ -223,7 +223,7 @@ def _read_flac(path, warn):
     afile = mutagen.flac.FLAC(path)
     for item in afile.tags:
         tag = _map_tag(item[0], warn)
-        result.append(TagValue(tag, '<BINARY DATA>' if tag == u'EmbeddedImage' else item[1]))
+        result.append(TagValue(tag, '<BINARY DATA>' if tag == 'EmbeddedImage' else item[1]))
 
     return result
     #return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]

@@ -49,16 +49,16 @@ class Track(TagStore):
     """
     def __init__(self, number=None):
         if number is not None:
-            self._tags[u'TrackNumber'] = [number]
+            self._tags['TrackNumber'] = [number]
 
     # ----------------------------------------------------------------------------------------------
     @property
     def number(self):
         """Track number."""
-        return self._tags[u'TrackNumber'][0] if u'TrackNumber' in self._tags else None
+        return self._tags['TrackNumber'][0] if 'TrackNumber' in self._tags else None
     @number.setter
     def number(self, value):
-        self._tags[u'TrackNumber'] = [value]
+        self._tags['TrackNumber'] = [value]
 
     # ----------------------------------------------------------------------------------------------
     def pprint(self):
@@ -73,7 +73,7 @@ class Disc(TagStore):
     def __init__(self, number):
         TagStore.__init__(self)
         if number is not None:
-            self._tags[u'DiscNumber'] = [number]
+            self._tags['DiscNumber'] = [number]
         self._is_single_artist = None
         self._is_various = None
 
@@ -81,10 +81,10 @@ class Disc(TagStore):
     @property
     def number(self):
         """Disc number."""
-        return self._tags[u'DiscNumber'][0] if u'DiscNumber' in self._tags else None
+        return self._tags['DiscNumber'][0] if 'DiscNumber' in self._tags else None
     @number.setter
     def number(self, value):
-        self._tags[u'DiscNumber'] = [value]
+        self._tags['DiscNumber'] = [value]
 
     # ----------------------------------------------------------------------------------------------
     @property
@@ -214,7 +214,7 @@ class _TagStoreBuilder(object):
         # the regular name, and vice versa (useful for working with some legacy data).
         entity = self._entity
         entity.tags.append_replace(relation.type, relation.sortname, relation.name)
-        entity.tags.append_replace(relation.type + u'Sort', relation.name, relation.sortname)
+        entity.tags.append_replace(relation.type + 'Sort', relation.name, relation.sortname)
 
     # ----------------------------------------------------------------------------------------------
     def apply_musicbrainz_relations(self, relations):
@@ -232,16 +232,16 @@ class _TagStoreBuilder(object):
         """
         entity = self._entity
         if entity.is_single_artist is None:
-            entity.is_single_artist = u'Artist' in common_values
+            entity.is_single_artist = 'Artist' in common_values
         entity.is_various = \
             not entity.is_single_artist and \
-            (u'AlbumArtist' not in common_values or \
-            u'Various Artists' in common_values[u'AlbumArtist'] or \
-            u'Various' in common_values[u'AlbumArtist'] or \
-            various in common_values[u'AlbumArtist'])
-        if entity.is_various and not u'AlbumArtist' in common_values:
-            entity.tags.append(u'AlbumArtist', various)
-            entity.tags.append(u'AlbumArtistSort', various)
+            ('AlbumArtist' not in common_values or \
+            'Various Artists' in common_values['AlbumArtist'] or \
+            'Various' in common_values['AlbumArtist'] or \
+            various in common_values['AlbumArtist'])
+        if entity.is_various and not 'AlbumArtist' in common_values:
+            entity.tags.append('AlbumArtist', various)
+            entity.tags.append('AlbumArtistSort', various)
 
     # ----------------------------------------------------------------------------------------------
     def _merge_children(self, various, keep_common):
@@ -295,23 +295,23 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         if match:
             parts = match.groupdict()
-            if u'Artist' not in tags and 'artist' in parts and parts['artist'] != '':
-                tags[u'Artist'] = [parts['artist']]
-            if u'Album' not in tags and 'album' in parts and parts['album'] != '':
-                tags[u'Album'] = [parts['album']]
-            if u'Date' not in tags and 'date' in parts and parts['date'] != '':
-                tags[u'Date'] = [parts['date']]
-            if u'DiscNumber' not in tags and 'disc' in parts and parts['disc'] != '':
-                tags[u'DiscNumber'] = [parts['disc']]
-            if u'TrackNumber' not in tags and 'track' in parts and parts['track'] != '':
-                tags[u'TrackNumber'] = [parts['track'].zfill(2)]
+            if 'Artist' not in tags and 'artist' in parts and parts['artist'] != '':
+                tags['Artist'] = [parts['artist']]
+            if 'Album' not in tags and 'album' in parts and parts['album'] != '':
+                tags['Album'] = [parts['album']]
+            if 'Date' not in tags and 'date' in parts and parts['date'] != '':
+                tags['Date'] = [parts['date']]
+            if 'DiscNumber' not in tags and 'disc' in parts and parts['disc'] != '':
+                tags['DiscNumber'] = [parts['disc']]
+            if 'TrackNumber' not in tags and 'track' in parts and parts['track'] != '':
+                tags['TrackNumber'] = [parts['track'].zfill(2)]
             # Also want to see if the existing title is a generic value like "Track 5".
-            if (u'Title' not in tags or tags[u'Title'][0][0:6] == 'Track ') and \
+            if ('Title' not in tags or tags['Title'][0][0:6] == 'Track ') and \
                 'title' in parts and parts['title'] !='':
-                tags[u'Title'] = [parts['title']]
+                tags['Title'] = [parts['title']]
         else:
-            if u'Title' not in tags:
-                tags[u'Title'] = [os.path.splitext(os.path.basename(path))[0]]
+            if 'Title' not in tags:
+                tags['Title'] = [os.path.splitext(os.path.basename(path))[0]]
 
     # ----------------------------------------------------------------------------------------------
     def split_disc_title(self):
@@ -319,14 +319,14 @@ class TrackBuilder(_TagStoreBuilder):
         Parse a musicbrainz-style disc title into title and disc number/subtitle.
         """
         tags = self.track.tags
-        if u'Album' in tags:
-            for title in tags[u'Album']:
-                parsed = util.parse_album_title(unicode(title))
+        if 'Album' in tags:
+            for title in tags['Album']:
+                parsed = util.parse_album_title(title)
                 if parsed.discnum is not None:
-                    tags[u'Album'] = [parsed.title]
-                    tags[u'DiscNumber'] = [parsed.discnum]
+                    tags['Album'] = [parsed.title]
+                    tags['DiscNumber'] = [parsed.discnum]
                 if parsed.subtitle is not None:
-                    tags[u'DiscSubtitle'] = [parsed.subtitle]
+                    tags['DiscSubtitle'] = [parsed.subtitle]
 
     # ----------------------------------------------------------------------------------------------
     def split_title_to_work_and_parts(self, classical):
@@ -334,18 +334,18 @@ class TrackBuilder(_TagStoreBuilder):
         Parse a musicbrainz-style title into work and part.
         """
         tags = self.track.tags
-        if u'Title' in tags:
-            for title in tags[u'Title']:
-                parsed = util.parse_track_title(unicode(title))
+        if 'Title' in tags:
+            for title in tags['Title']:
+                parsed = util.parse_track_title(title)
                 if parsed.parts is not None:
-                    tags.remove(u'Title', title)
+                    tags.remove('Title', title)
                     if parsed.work is not None:
                         #tags.append_unique(u'Work', parsed.work)
-                        tags[u'Work'] = [parsed.work]
+                        tags['Work'] = [parsed.work]
                     for part in parsed.parts:
-                        tags.append_unique(u'Part', part)
-                if u'Work' not in tags and classical:
-                    tags.move_values(u'Title', u'Work')
+                        tags.append_unique('Part', part)
+                if 'Work' not in tags and classical:
+                    tags.move_values('Title', 'Work')
 
     # ----------------------------------------------------------------------------------------------
     def remove_instruments(self):
@@ -353,8 +353,8 @@ class TrackBuilder(_TagStoreBuilder):
         Remove instrument/role information from Performer tags.
         """
         tags = self.track.tags
-        if u'Performer' in tags:
-            tags[u'Performer'] = util.remove_artist_roles(tags[u'Performer'])
+        if 'Performer' in tags:
+            tags['Performer'] = util.remove_artist_roles(tags['Performer'])
 
     # ----------------------------------------------------------------------------------------------
     def _apply_release_data(self, mb_release):
@@ -364,34 +364,34 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
 
         artists = mb.get_artists(mb_release, self._options.locale)
-        tags[u'AlbumArtists'] = [artist.name for artist in artists]
-        tags[u'AlbumArtistsSort'] = [artist.sortname for artist in artists]
+        tags['AlbumArtists'] = [artist.name for artist in artists]
+        tags['AlbumArtistsSort'] = [artist.sortname for artist in artists]
         if len(artists) == 1:
-            tags[u'AlbumArtist'] = [artists[0].name]
-            tags[u'AlbumArtistSort'] = [artists[0].sortname]
+            tags['AlbumArtist'] = [artists[0].name]
+            tags['AlbumArtistSort'] = [artists[0].sortname]
 
-        tags[u'Album'] = [unicode(mb_release['title'])]
+        tags['Album'] = [mb_release['title']]
         
         # Use the earliest (US) release date and earliest release group release date.
         date = mb.get_earliest_release(mb_release)
         if date is not None:
-            tags[u'Date'] = [date]
+            tags['Date'] = [date]
         orig_date = mb.get_earliest_rg_release(mb_release)
         if orig_date is not None:
-            if u'Date' in tags:
-                if orig_date != tags[u'Date'][0]:
-                    tags[u'OriginalDate'] = [orig_date]
+            if 'Date' in tags:
+                if orig_date != tags['Date'][0]:
+                    tags['OriginalDate'] = [orig_date]
             else:
-                tags[u'Date'] = [date]
+                tags['Date'] = [date]
         
         # Barcode, ASIN, CatalogNumber.
         if 'asin' in mb_release:
-            tags[u'ASIN'] = [mb_release['asin']]
+            tags['ASIN'] = [mb_release['asin']]
         if 'barcode' in mb_release and mb_release['barcode'] != '':
-            tags[u'Barcode'] = [mb_release['barcode']]
+            tags['Barcode'] = [mb_release['barcode']]
         catnum = mb.get_release_catalognumber(mb_release)
         if not catnum is None:
-            tags[u'CatalogNumber'] = [catnum]
+            tags['CatalogNumber'] = [catnum]
         
         # Add the artist relations using sortnames.
         self.apply_musicbrainz_relations(mb.get_artist_relations(mb_release, self._options.locale))
@@ -403,7 +403,7 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
         if 'title' in mb_medium:
-            tags[u'DiscSubtitle'] = [unicode(mb_medium['title'])]
+            tags['DiscSubtitle'] = [mb_medium['title']]
 
     # ----------------------------------------------------------------------------------------------
     def _apply_track_data(self, mb_track):
@@ -415,14 +415,14 @@ class TrackBuilder(_TagStoreBuilder):
 
         found_title = ('title' in mb_track)
         if found_title:
-            tags[u'Title'] = [unicode(mb_track['title'])]
+            tags['Title'] = [mb_track['title']]
 
         artists = mb.get_artists(mb_track, self._options.locale)
-        tags[u'Artists'] = [artist.name for artist in artists]
-        tags[u'ArtistsSort'] = [artist.sortname for artist in artists]
+        tags['Artists'] = [artist.name for artist in artists]
+        tags['ArtistsSort'] = [artist.sortname for artist in artists]
         if len(artists) == 1:
-            tags[u'Artist'] = [artists[0].name]
-            tags[u'ArtistSort'] = [artists[0].sortname]
+            tags['Artist'] = [artists[0].name]
+            tags['ArtistSort'] = [artists[0].sortname]
         
         return found_title
 
@@ -434,11 +434,11 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
 
-        tags[u'RecordingTitle'] = [unicode(mb_recording['title'])]
-        if (not u'Title' in tags or apply_title) and 'title' in mb_recording:
-            tags[u'Title'] = [unicode(mb_recording['title'])]
+        tags['RecordingTitle'] = [mb_recording['title']]
+        if (not 'Title' in tags or apply_title) and 'title' in mb_recording:
+            tags['Title'] = [mb_recording['title']]
         if 'disambiguation' in mb_recording and mb_recording['disambiguation'] != '':
-            tags.append_unique(u'Version', mb_recording['disambiguation'])
+            tags.append_unique('Version', mb_recording['disambiguation'])
 
         # Add the artist relations using sortnames.
         locale = self._options.locale
@@ -450,17 +450,17 @@ class TrackBuilder(_TagStoreBuilder):
 
         #mb_work = mb.get_work_by_id(mb_work['id']);
         if apply_title:
-            title = unicode(mb_work['title'])
+            title = mb_work['title']
             if self._options.parse_title:
                 parsed = util.parse_track_title(title)
                 if parsed.parts is not None:
                     if parsed.work is not None:
-                        tags.append_unique(u'Work', parsed.work)
+                        tags.append_unique('Work', parsed.work)
                         #tags[u'Work'] = [parsed.work]
                     for part in parsed.parts:
-                        tags.append_unique(u'Part', part)
+                        tags.append_unique('Part', part)
             else:
-                tags[u'Work'] = tags.append_unique(u'Work', title)
+                tags['Work'] = tags.append_unique('Work', title)
 
 
         # Add the artist relations using sortnames.
@@ -491,7 +491,7 @@ class TrackBuilder(_TagStoreBuilder):
         tags = self.track.tags
         
         self._apply_release_data(mbdata)
-        medium_num = (tags[u'DiscNumber'][0] if u'DiscNumber' in tags else '1')
+        medium_num = (tags['DiscNumber'][0] if 'DiscNumber' in tags else '1')
         mb_medium = mb.get_release_medium(mbdata, medium_num)
         if not mb_medium is None:
             self._apply_medium_data(mb_medium)
@@ -594,14 +594,14 @@ class ReleaseBuilder(_TagStoreBuilder):
         # Temporarily make sure everything is 'Various Artists' so we don't have issues with unique
         # appends or replaces with mismatched values.
         tags = builder.track.tags
-        tags.replace(u'AlbumArtist', u'Various', u'Various Artists')
-        tags.replace(u'AlbumArtist', self._options.various, u'Various Artists')
-        tags.replace(u'AlbumArtistSort', u'Various', u'Various Artists')
-        tags.replace(u'AlbumArtistSort', self._options.various, u'Various Artists')
-        tags.replace(u'AlbumArtists', u'Various', u'Various Artists')
-        tags.replace(u'AlbumArtists', self._options.various, u'Various Artists')
-        tags.replace(u'AlbumArtistsSort', u'Various', u'Various Artists')
-        tags.replace(u'AlbumArtistsSort', self._options.various, u'Various Artists')
+        tags.replace('AlbumArtist', 'Various', 'Various Artists')
+        tags.replace('AlbumArtist', self._options.various, 'Various Artists')
+        tags.replace('AlbumArtistSort', 'Various', 'Various Artists')
+        tags.replace('AlbumArtistSort', self._options.various, 'Various Artists')
+        tags.replace('AlbumArtists', 'Various', 'Various Artists')
+        tags.replace('AlbumArtists', self._options.various, 'Various Artists')
+        tags.replace('AlbumArtistsSort', 'Various', 'Various Artists')
+        tags.replace('AlbumArtistsSort', self._options.various, 'Various Artists')
 
         # Note: Some old musicbrainz metadata will have a different albumid for each disc in a
         # multi-disc release.  This is an artifact of the days when musicbrainz represented each
@@ -609,8 +609,8 @@ class ReleaseBuilder(_TagStoreBuilder):
         # for either mbid.
         if self._options.call_musicbrainz:
             mb._set_api_format(self._options.api_format)
-            if self.musicbrainz_data is None and u'musicbrainz_albumid' in tags:
-                self.musicbrainz_data = mb.get_release_by_id(tags[u'musicbrainz_albumid'][0])
+            if self.musicbrainz_data is None and 'musicbrainz_albumid' in tags:
+                self.musicbrainz_data = mb.get_release_by_id(tags['musicbrainz_albumid'][0])
 
         if not self.musicbrainz_data is None:
             builder.apply_musicbrainz(self.musicbrainz_data)
@@ -640,7 +640,7 @@ class ReleaseBuilder(_TagStoreBuilder):
         release = self.release
 
         # Check if this is the first encounter with a certain disc number.
-        discnum = (track.tags[u'DiscNumber'][0] if u'DiscNumber' in track.tags else None)
+        discnum = (track.tags['DiscNumber'][0] if 'DiscNumber' in track.tags else None)
         if not discnum in [d.number for d in release.discs]:
             # Initialize a new disc object.
             disc = Disc(discnum)
@@ -679,9 +679,9 @@ class ReleaseBuilder(_TagStoreBuilder):
         self.merge_discs()
 
         # Set the final "Various Artists"/"Various" values.
-        release.replace_all(u'AlbumArtist', u'Various Artists', self._options.various)
-        release.replace_all(u'AlbumArtistSort', u'Various Artists', self._options.various)
-        release.replace_all(u'AlbumArtists', u'Various Artists', self._options.various)
-        release.replace_all(u'AlbumArtistsSort', u'Various Artists', self._options.various)
+        release.replace_all('AlbumArtist', 'Various Artists', self._options.various)
+        release.replace_all('AlbumArtistSort', 'Various Artists', self._options.various)
+        release.replace_all('AlbumArtists', 'Various Artists', self._options.various)
+        release.replace_all('AlbumArtistsSort', 'Various Artists', self._options.various)
 
         return release

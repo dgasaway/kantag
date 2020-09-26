@@ -24,87 +24,87 @@ from kantag._version import __version__
 """ Maps musicbrainz relationship UUIDs to cannonical tags. """
 _mbz_reltype_map = {
     # Work 'composer'
-    'd59d99ea-23d4-4a80-b066-edca32ee158f' : u'Composer',
+    'd59d99ea-23d4-4a80-b066-edca32ee158f' : 'Composer',
     # Work 'librettist'
-    '7474ab81-486f-40b5-8685-3a4f8ea624cb' : u'Lyricist',
+    '7474ab81-486f-40b5-8685-3a4f8ea624cb' : 'Lyricist',
     # Work 'lyricist'
-    '3e48faba-ec01-47fd-8e89-30e81161661c' : u'Lyricist',
+    '3e48faba-ec01-47fd-8e89-30e81161661c' : 'Lyricist',
     # Work 'translator'
-    'da6c5d8a-ce13-474d-9375-61feb29039a5' : u'Lyricist',
+    'da6c5d8a-ce13-474d-9375-61feb29039a5' : 'Lyricist',
     # Work 'arranger'
-    'd3fd781c-5894-47e2-8c12-86cc0e2c8d08' : u'Arranger',
+    'd3fd781c-5894-47e2-8c12-86cc0e2c8d08' : 'Arranger',
     # Work 'instrument arranger'
-    '0084e70a-873e-4f7f-b3ff-635b9e863dae' : u'Arranger',
+    '0084e70a-873e-4f7f-b3ff-635b9e863dae' : 'Arranger',
     # Work 'vocal arranger'
-    '6a88b92b-8fb5-41b3-aa1f-169ee7e05ed6' : u'Arranger',
+    '6a88b92b-8fb5-41b3-aa1f-169ee7e05ed6' : 'Arranger',
     # Work 'orchestrator'
-    '0a1771e1-8639-4740-8a43-bdafc050c3da' : u'Arranger',
+    '0a1771e1-8639-4740-8a43-bdafc050c3da' : 'Arranger',
     # Work 'revised by'
-    'eeb9c319-9fde-4313-b76d-29db1576aad8' : u'Arranger',
+    'eeb9c319-9fde-4313-b76d-29db1576aad8' : 'Arranger',
     # Work 'reconstructed by'
-    'cb887d1b-5267-4f3d-badb-5b3fba7349f6' : u'Arranger',
+    'cb887d1b-5267-4f3d-badb-5b3fba7349f6' : 'Arranger',
     # Work 'writer'
-    'a255bca1-b157-4518-9108-7b147dc3fc68' : u'Writer',
+    'a255bca1-b157-4518-9108-7b147dc3fc68' : 'Writer',
     
     # Recording 'arranger'
-    '22661fb8-cdb7-4f67-8385-b2a8be6c9f0d' : u'Arranger',
+    '22661fb8-cdb7-4f67-8385-b2a8be6c9f0d' : 'Arranger',
     # Recording 'instrument arranger'
-    '4820daa1-98d6-4f8b-aa4b-6895c5b79b27' : u'Arranger',
+    '4820daa1-98d6-4f8b-aa4b-6895c5b79b27' : 'Arranger',
     # Recording 'vocal arranger'
-    '8a2799e8-a7e2-41ce-a7da-b5f520687216' : u'Arranger',
+    '8a2799e8-a7e2-41ce-a7da-b5f520687216' : 'Arranger',
     # Recording 'orchestrator'
-    '38fa7405-f9a5-48cb-827a-8ac601933ba0' : u'Arranger',
+    '38fa7405-f9a5-48cb-827a-8ac601933ba0' : 'Arranger',
     # Recording 'performer'
-    '628a9658-f54c-4142-b0c0-95f031b544da' : u'Performer',
+    '628a9658-f54c-4142-b0c0-95f031b544da' : 'Performer',
     # Recording 'instrument'
-    '59054b12-01ac-43ee-a618-285fd397e461' : u'Performer',
+    '59054b12-01ac-43ee-a618-285fd397e461' : 'Performer',
     # Recording 'vocal'
-    '0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa' : u'Performer',
+    '0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa' : 'Performer',
     # Recording 'performing orchestra'
-    '3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb' : u'Performer',
+    '3b6616c5-88ba-4341-b4ee-81ce1e6d7ebb' : 'Performer',
     # Recording 'programming'
-    '36c50022-44e0-488d-994b-33f11d20301e' : u'Performer',
+    '36c50022-44e0-488d-994b-33f11d20301e' : 'Performer',
     # Recording 'conductor'
-    '234670ce-5f22-4fd0-921b-ef1662695c5d' : u'Conductor',
+    '234670ce-5f22-4fd0-921b-ef1662695c5d' : 'Conductor',
     # Recording 'chorus master'
-    '45115945-597e-4cb9-852f-4e6ba583fcc8' : u'Conductor',
+    '45115945-597e-4cb9-852f-4e6ba583fcc8' : 'Conductor',
     # Recording 'remixer'
-    '7950be4d-13a3-48e7-906b-5af562e39544' : u'Arranger',    
+    '7950be4d-13a3-48e7-906b-5af562e39544' : 'Arranger',
     
     # Release 'composer'
-    '01ce32b0-d873-4baa-8025-714b45c0c754' : u'Composer',
+    '01ce32b0-d873-4baa-8025-714b45c0c754' : 'Composer',
     # Release 'librettist'
-    'dd182715-ca2b-4e4b-80b1-d21742fda0dc' : u'Lyricist',
+    'dd182715-ca2b-4e4b-80b1-d21742fda0dc' : 'Lyricist',
     # Release 'lyricist'
-    'a2af367a-b040-46f8-af21-310f92dfe97b' : u'Lyricist',
+    'a2af367a-b040-46f8-af21-310f92dfe97b' : 'Lyricist',
     # Release 'translator'
-    '4db37fec-eb67-45d3-b4fa-148a68135fbb' : u'Lyricist',
+    '4db37fec-eb67-45d3-b4fa-148a68135fbb' : 'Lyricist',
     # Release 'arranger'
-    '34d5334e-a4c8-4b65-a5f8-bbcc9c81d13d' : u'Arranger',
+    '34d5334e-a4c8-4b65-a5f8-bbcc9c81d13d' : 'Arranger',
     # Release 'instrument arranger'
-    '18f159bb-44f0-4aef-b198-a4736ad9b659' : u'Arranger',
+    '18f159bb-44f0-4aef-b198-a4736ad9b659' : 'Arranger',
     # Release 'vocal arranger'
-    'd7d9128d-e676-4d8f-a353-f48a55a98501' : u'Arranger',
+    'd7d9128d-e676-4d8f-a353-f48a55a98501' : 'Arranger',
     # Release 'orchestrator'
-    '04e1f0b6-ef40-4168-ba25-42a87729fe09' : u'Arranger',
+    '04e1f0b6-ef40-4168-ba25-42a87729fe09' : 'Arranger',
     # Release 'writer'
-    'ca7a474a-a1cd-4431-9230-56a17f553090' : u'Writer',
+    'ca7a474a-a1cd-4431-9230-56a17f553090' : 'Writer',
     # Release 'performer'
-    '888a2320-52e4-4fe8-a8a0-7a4c8dfde167' : u'Performer',
+    '888a2320-52e4-4fe8-a8a0-7a4c8dfde167' : 'Performer',
     # Release 'instrument'
-    '67555849-61e5-455b-96e3-29733f0115f5' : u'Performer',
+    '67555849-61e5-455b-96e3-29733f0115f5' : 'Performer',
     # Release 'vocal'
-    'eb10f8a0-0f4c-4dce-aa47-87bcb2bc42f3' : u'Performer',
+    'eb10f8a0-0f4c-4dce-aa47-87bcb2bc42f3' : 'Performer',
     # Release 'performing orchestra'
-    '23a2e2e7-81ca-4865-8d05-2243848a77bf' : u'Performer',
+    '23a2e2e7-81ca-4865-8d05-2243848a77bf' : 'Performer',
     # Release 'programming'
-    '617063ad-dbb5-4877-9ba0-ba2b9198d5a7' : u'Performer',
+    '617063ad-dbb5-4877-9ba0-ba2b9198d5a7' : 'Performer',
     # Release 'conductor'
-    '9ae9e4d0-f26b-42fb-ab5c-1149a47cf83b' : u'Conductor',
+    '9ae9e4d0-f26b-42fb-ab5c-1149a47cf83b' : 'Conductor',
     # Release 'chorus master'
-    'b9129850-73ec-4af5-803c-1c12b97e25d2' : u'Conductor',
+    'b9129850-73ec-4af5-803c-1c12b97e25d2' : 'Conductor',
     # Release 'remixer'
-    'ac6a86db-f757-4815-a07e-744428d2382b' : u'Arranger',    
+    'ac6a86db-f757-4815-a07e-744428d2382b' : 'Arranger',
     }
 """ Musicbrainz relationship UUID for work-work 'parts' relationship. """
 _mbz_parts_id = 'ca8d3642-ce5f-49f8-91f2-125d72524e6a'
@@ -220,9 +220,9 @@ def get_artists(entity, locale='en'):
         for ac in entity['artist-credit']:
             if type(ac) == type(dict()) and 'artist' in ac:
                 artist = get_artist_primary_alias(ac['artist'], locale)
-                result.append(Relation(u'Artist', artist.name, artist.sortname))
+                result.append(Relation('Artist', artist.name, artist.sortname))
     elif 'artist-credit-phrase' in entity:
-        result.append(Relation(u'Artist', entity['artist-credit-phrase'], ''))
+        result.append(Relation('Artist', entity['artist-credit-phrase'], ''))
 
     return result
 

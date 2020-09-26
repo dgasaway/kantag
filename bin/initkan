@@ -35,33 +35,33 @@ from kantag.tagstores import Release, Disc, Track, ReleaseBuilder
 
 # Lists of initkan supported tags.
 _release_tags = frozenset([
-    u'Album', u'AlbumArtist', u'AlbumArtistSort', u'AlbumArtists', u'AlbumArtistsSort', u'Arranger',
-    u'ArrangerSort', u'Artist', u'ArtistSort', u'ASIN', u'Barcode', u'CatalogNumber', u'Comment',
-    u'Composer', u'ComposerSort',  u'Conductor', u'ConductorSort', u'Date', u'Genre', u'LabelId',
-    u'Lyricist', u'LyricistSort', u'OriginalDate', u'Part', u'Performer', u'PerformerSort',
-    u'Title', u'Version', u'Writer', u'Work', u'WriterSort',
+    'Album', 'AlbumArtist', 'AlbumArtistSort', 'AlbumArtists', 'AlbumArtistsSort', 'Arranger',
+    'ArrangerSort', 'Artist', 'ArtistSort', 'ASIN', 'Barcode', 'CatalogNumber', 'Comment',
+    'Composer', 'ComposerSort',  'Conductor', 'ConductorSort', 'Date', 'Genre', 'LabelId',
+    'Lyricist', 'LyricistSort', 'OriginalDate', 'Part', 'Performer', 'PerformerSort',
+    'Title', 'Version', 'Writer', 'Work', 'WriterSort',
     ])
 _disc_tags = frozenset([
-    u'AlbumArtist', u'AlbumArtistSort', u'AlbumArtists', 'AlbumArtistsSort', u'Arranger',
-    u'ArrangerSort', u'Artist', u'ArtistSort', u'Comment', u'Composer', u'ComposerSort',
-    u'Conductor', u'ConductorSort', u'CoverNumber', u'Date', u'DiscNumber', u'DiscSubtitle',
-    u'Genre', u'Lyricist', u'LyricistSort', u'OriginalDate', u'Part', u'Performer',
-    u'PerformerSort', u'Title', u'Version', u'Work', u'Writer', u'WriterSort'
+    'AlbumArtist', 'AlbumArtistSort', 'AlbumArtists', 'AlbumArtistsSort', 'Arranger',
+    'ArrangerSort', 'Artist', 'ArtistSort', 'Comment', 'Composer', 'ComposerSort',
+    'Conductor', 'ConductorSort', 'CoverNumber', 'Date', 'DiscNumber', 'DiscSubtitle',
+    'Genre', 'Lyricist', 'LyricistSort', 'OriginalDate', 'Part', 'Performer',
+    'PerformerSort', 'Title', 'Version', 'Work', 'Writer', 'WriterSort'
     ])
 _track_tags = frozenset([
-    u'Arranger', u'ArrangerSort', u'Artist', u'ArtistSort', u'Artists', u'ArtistsSort', u'Comment',
-    u'Composer', u'ComposerSort', u'Conductor', u'ConductorSort', u'CoverNumber', u'Genre',
-    u'Lyricist', u'LyricistSort', u'Part', u'Performer', u'PerformerSort', u'Title', u'TrackNumber',
-    u'Version', u'Work', u'Writer', u'WriterSort'
+    'Arranger', 'ArrangerSort', 'Artist', 'ArtistSort', 'Artists', 'ArtistsSort', 'Comment',
+    'Composer', 'ComposerSort', 'Conductor', 'ConductorSort', 'CoverNumber', 'Genre',
+    'Lyricist', 'LyricistSort', 'Part', 'Performer', 'PerformerSort', 'Title', 'TrackNumber',
+    'Version', 'Work', 'Writer', 'WriterSort'
     ])
 _musicbrainz_tags = [
-    u'musicbrainz_albumid', u'musicbrainz_albumartistid', u'musicbrainz_artistid',
-    u'musicbrainz_discid', u'musicbrainz_releasegroupid', u'musicbrainz_releasetrackid',
-    u'musicbrainz_trackid', u'musicbrainz_workid', u'acoustid_id'
+    'musicbrainz_albumid', 'musicbrainz_albumartistid', 'musicbrainz_artistid',
+    'musicbrainz_discid', 'musicbrainz_releasegroupid', 'musicbrainz_releasetrackid',
+    'musicbrainz_trackid', 'musicbrainz_workid', 'acoustid_id'
     ]
 _replaygain_tags = [
-    u'replaygain_album_peak', u'replaygain_album_gain', u'replaygain_track_peak',
-    u'replaygain_track_gain'
+    'replaygain_album_peak', 'replaygain_album_gain', 'replaygain_track_peak',
+    'replaygain_track_gain'
     ]
 
 # --------------------------------------------------------------------------------------------------
@@ -581,10 +581,10 @@ def process_files():
 
     # Write out from the builder.
     if args.output == '-':
-        print unicode(builder.tags).encode('utf-8')
+        print str(builder.tags).encode('utf-8')
     else:
         with io.open(args.output, mode='wt', encoding='utf-8') as f:
-            f.write(unicode(builder.tags))
+            f.write(str(builder.tags))
 
 # --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
