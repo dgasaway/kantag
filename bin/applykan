@@ -161,7 +161,7 @@ def main():
     try:
         process_files(args)
     except TaggingError as e:
-        print('An exception occurred:\n' + ';'.join(e.args).encode('utf-8'), file=sys.stderr)
+        print('An exception occurred:\n' + ';'.join(e.args), file=sys.stderr)
         exit(2)
 
 # --------------------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ def write_tags_to_file(tags, filename, args):
     if args.verbose == 2:
         for tag, lst in tags.items():
             for value in lst:
-                print(('\t' + tag + '=' + value).encode('utf-8'))
+                print('\t' + tag + '=' + value)
     elif args.verbose >= 3:
         print(pprint.PrettyPrinter(indent=2).pformat(tags))
 
@@ -228,7 +228,7 @@ def process_file(tagf, filename, args):
     tag file.
     """
     if args.verbose >= 1:
-        print(filename.encode('utf-8'))
+        print(filename)
 
     # Use path and regex to get the disc/track number of the file.
     path = os.path.abspath(filename)
@@ -282,7 +282,7 @@ def process_files(args):
 
     if args.verbose >= 3:
         print('<TagFile>')
-        print(tagf.pprint(True).encode('utf-8'))
+        print(tagf.pprint(True))
 
     if args.sort_map is not None:
         tagf.apply_map(args.sort_map)
@@ -294,7 +294,7 @@ def process_files(args):
     if args.warn and args.warn_unused:
         for source_line in [line.source_line for line in tagf.lines if not line.used]:
             print('warning: unused tag line:', file=sys.stderr)
-            print(source_line.encode('utf-8'), file=sys.stderr)
+            print(source_line, file=sys.stderr)
 
 # --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ import io
 import pprint
 import re
 import argparse
-import imp
+import importlib
 from argparse import ArgumentParser
 
 # Patch sys.path if running with source directory layout.
@@ -174,11 +174,9 @@ def main():
         print(pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n', file=sys.stderr)
 
     # Check for presence of musicbrainsngs.
-    try:
-        if args.call_musicbrainz == True:
-            import musicbrainzngs
-    except ImportError:
-        parser.error("musicbrainzngs package must be installed to use '--call-musicbrainz'")
+    if args.call_musicbrainz == True:
+        if importlib.util.find_spec('musicbrainzngs') is None:
+            parser.error("musicbrainzngs package must be installed to use '--call-musicbrainz'")
         
     # Check for valid files.
     for audio_file in args.audio_files:
@@ -189,7 +187,7 @@ def main():
     try:
         process_files()
     except TaggingError as e:
-        print('An exception occurred:\n' + ';'.join(e.args).encode('utf-8'), file=sys.stderr)
+        print('An exception occurred:\n' + ';'.join(e.args), file=sys.stderr)
         exit(2)
 
 # --------------------------------------------------------------------------------------------------
@@ -321,7 +319,7 @@ def add_structured(builder, rel):
     """
     if args.verbose >= 2:
         print('\n<Release entity>', file=sys.stderr)
-        print(rel.pprint().encode('utf-8'), file=sys.stderr)
+        print(rel.pprint(), file=sys.stderr)
 
     builder.add_comment('Album / common track info')
     # The release may have an albumartist even if it's a single-artist release.
@@ -580,7 +578,7 @@ def process_files():
 
     # Write out from the builder.
     if args.output == '-':
-        print(str(builder.tags).encode('utf-8'))
+        print(str(builder.tags))
     else:
         with io.open(args.output, mode='wt', encoding='utf-8') as f:
             f.write(str(builder.tags))

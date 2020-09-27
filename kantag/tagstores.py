@@ -221,7 +221,7 @@ class _TagStoreBuilder(object):
         """
         Apply a list musicbrainz Relation instances to the given TagSet.
         """
-        for rel in relations:
+        for relation in relations:
             self.apply_musicbrainz_relation(relation)
 
     # ----------------------------------------------------------------------------------------------
@@ -364,6 +364,9 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
 
+        if self._options.verbose >= 3:
+            pprint.pprint(mb_release, stream=sys.stderr)
+            
         artists = mb.get_artists(mb_release, self._options.locale)
         tags['AlbumArtists'] = [artist.name for artist in artists]
         tags['AlbumArtistsSort'] = [artist.sortname for artist in artists]

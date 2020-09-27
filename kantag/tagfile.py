@@ -86,7 +86,7 @@ class TagLine(object):
     def tag(self, value):
         self._tag = value
         if self.warn and value not in cannonical_tags:
-            print('warning: unrecognized tag: ' + value.encode('utf-8'), file=sys.stderr)
+            print('warning: unrecognized tag: ' + value, file=sys.stderr)
 
     # ----------------------------------------------------------------------------------------------
     @property
@@ -125,8 +125,7 @@ class TagLine(object):
             pattern = r'^(?P<type>[#])(?P<comment>.*)$'
             match = re.match(pattern, line)
             if not match:
-                raise exceptions.TagFileFormatError(
-                    'Malformed comment tag: ' + line.encode('utf-8'))
+                raise exceptions.TagFileFormatError('Malformed comment tag: ' + line)
 
             self.line_type = match.group('type')
             self._value = match.group('comment').strip()
@@ -137,8 +136,7 @@ class TagLine(object):
             pattern = r'^(?P<type>[aA]) (?P<tagname>[^=]*)=(?P<tagvalue>.+)$'
             match = re.match(pattern, line)
             if not match:
-                raise exceptions.TagFileFormatError(
-                    'Malformed album tag: ' + line.encode('utf-8'))
+                raise exceptions.TagFileFormatError('Malformed album tag: ' + line)
 
             self.line_type = match.group('type')
             self.tag = match.group('tagname')
@@ -151,8 +149,7 @@ class TagLine(object):
                 r'(?P<tagname>[^=]*)=(?P<tagvalue>.+)$'
             match = re.match(pattern, line)
             if not match:
-                raise exceptions.TagFileFormatError(
-                    'Malformed disc/track tag: ' + line.encode('utf-8'))
+                raise exceptions.TagFileFormatError('Malformed disc/track tag: ' + line)
 
             self.line_type = match.group('type')
             self._applies_to = util.expand_ranges(match.group('range'))
