@@ -116,6 +116,10 @@ def main():
     group.add_argument('-M', '--call-musicbrainz',
         help='enable calls to the musicbrainz web service [default=n]',
         action=ToggleAction, choices=['y', 'n'], default=False)
+    group.add_argument('--release-mbid',
+        help='unique id of the release to lookup in the musicbrainz database; optional if an id is '
+        'present in the existing tags, but given preference over a tag value',
+        metavar="MBID", action='store', type=str)
     group.add_argument('--locale',
         help='artist alias locale to use for musicbrainz data [default=en]',
         action='store', type=str, default='en')

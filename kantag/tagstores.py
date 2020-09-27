@@ -634,10 +634,15 @@ class ReleaseBuilder(_TagStoreBuilder):
         # multi-disc release.  This is an artifact of the days when musicbrainz represented each
         # disc as a different release.  However, the API will return the same full release metadata
         # for either mbid.
-        if self._options.call_musicbrainz:
+        if self._options.call_musicbrainz and self.musicbrainz_data is None:
             mb._set_api_format(self._options.api_format)
-            if self.musicbrainz_data is None and 'musicbrainz_albumid' in tags:
-                self.musicbrainz_data = mb.get_release_by_id(tags['musicbrainz_albumid'][0])
+            release_id = self._options.release_mbid
+            if release_id is None and 'musicbrainz_albumid' in tags:
+                release_id = tags['musicbrainz_albumid'][0]
+            if release_id is None:
+                print('warning: no release id available for musicbrainz lookup', file=sys.stderr)
+            else:
+                self.musicbrainz_data = mb.get_release_by_id(release_id)
 
         if not self.musicbrainz_data is None:
             builder.apply_musicbrainz(self.musicbrainz_data)
