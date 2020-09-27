@@ -481,7 +481,7 @@ class TrackBuilder(_TagStoreBuilder):
         """
         # Bail out of musicbrainz is not available.
         if mb is None:
-            warnings.warn('musicbrainz package is not available')
+            print('warning: musicbrainz package is not available', file=sys.stderr)
         
         # Note: All data is initially loaded into track tags - from existing tags, inferred from
         # path, etc.  On the other hand, musicbrainz data is hierarchical.  Which means, in order
@@ -500,7 +500,12 @@ class TrackBuilder(_TagStoreBuilder):
         if not mb_medium is None:
             self._apply_medium_data(mb_medium)
 
-            mb_track = mb.get_medium_track(mb_medium, self.track.number)
+            mb_track = None
+            if self.track.number is None:
+                print('warning: file track number unknown; cannot match to musicbrainz',
+                    file=sys.stderr)
+            else:
+                mb_track = mb.get_medium_track(mb_medium, self.track.number)
             if not mb_track is None:
                 # If the track title matches the recording title, then the API will not include a
                 # title on the track, so we need to pull it from the recording instead.
