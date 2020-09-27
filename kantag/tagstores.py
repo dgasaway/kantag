@@ -366,6 +366,14 @@ class TrackBuilder(_TagStoreBuilder):
 
         if self._options.verbose >= 3:
             pprint.pprint(mb_release, stream=sys.stderr)
+
+        tags['musicbrainz_albumid'] = [mb_release['id']]
+        tags['musicbrainz_releasegroupid'] = [mb_release['release-group']['id']]
+        tags['musicbrainz_albumartistid'] = \
+            [ac['artist']['id'] for ac in mb_release['artist-credit']]
+
+        #for ac in mb_release['artist-credit']:
+        #    tags.append_unique('musicbrainz_albumartistid', ac['artist']['id'])
             
         artists = mb.get_artists(mb_release, self._options.locale)
         tags['AlbumArtists'] = [artist.name for artist in artists]
@@ -417,6 +425,9 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
 
+        tags['musicbrainz_releasetrackid'] = [mb_track['id']]
+        tags['musicbrainz_artistid'] = [ac['artist']['id'] for ac in mb_track['artist-credit']]
+
         found_title = ('title' in mb_track)
         if found_title:
             tags['Title'] = [mb_track['title']]
@@ -438,6 +449,8 @@ class TrackBuilder(_TagStoreBuilder):
         """
         tags = self.track.tags
 
+        tags['musicbrainz_trackid'] = [mb_recording['id']]
+
         tags['RecordingTitle'] = [mb_recording['title']]
         if (not 'Title' in tags or apply_title) and 'title' in mb_recording:
             tags['Title'] = [mb_recording['title']]
@@ -450,9 +463,16 @@ class TrackBuilder(_TagStoreBuilder):
 
     # ----------------------------------------------------------------------------------------------
     def _apply_work_data(self, mb_work, recurse, apply_title):
+        """
+        Apply work-level musicbrainz metadata to the track tags.  'apply_title' indicates whether
+        the work tile hould be appended to the 'Work' and/or 'Part' tags.  'recuse' indicates
+        whether to follow available links to related works, potentially enhancing available
+        work/part data.
+        """
         tags = self.track.tags
 
-        #mb_work = mb.get_work_by_id(mb_work['id']);
+        tags.append_unique('musicbrainz_workid', mb_work['id'])
+
         if apply_title:
             title = mb_work['title']
             if self._options.parse_title:
@@ -460,16 +480,14 @@ class TrackBuilder(_TagStoreBuilder):
                 if parsed.parts is not None:
                     if parsed.work is not None:
                         tags.append_unique('Work', parsed.work)
-                        #tags[u'Work'] = [parsed.work]
                     for part in parsed.parts:
                         tags.append_unique('Part', part)
             else:
-                tags['Work'] = tags.append_unique('Work', title)
+                tags.append_unique('Work', title)
 
 
         # Add the artist relations using sortnames.
         rels = mb.get_work_artist_relations(mb_work, recurse, self._options.locale)
-        #pprint.pprint(rels, stream=sys.stderr)
         self.apply_musicbrainz_relations(rels)
 
     # ----------------------------------------------------------------------------------------------
