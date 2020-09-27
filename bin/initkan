@@ -131,10 +131,6 @@ def main():
     group.add_argument('--keep-common',
         help=argparse.SUPPRESS,
         action=ToggleAction, choices=['y', 'n'], default=False)
-    # Set musicbrainzngs API format.  DEBUG USE ONLY.
-    group.add_argument('--api-format',
-        help=argparse.SUPPRESS,
-        action='store', choices=['xml', 'json'], default='json')
 
     group = parser.add_argument_group(title='output format arguments')
     group.add_argument('-S', '--structured',

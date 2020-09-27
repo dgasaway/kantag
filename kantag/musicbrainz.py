@@ -115,22 +115,11 @@ Relation = collections.namedtuple('Relation', 'type, name, sortname')
 """ An artist name-sortname pair. """
 ArtistName = collections.namedtuple('ArtistName', 'name, sortname')
 
-""" API response format. """
-_format = 'json'
-
 # Initialize the user agent.
 ngs.set_useragent('kantag', __version__, 'https://bitbucket.org/dgasaway/kantag/')
-
-# --------------------------------------------------------------------------------------------------
-def _set_api_format(api_format):
-    """
-    Set the API format (xml or json).  FOR DEBUG USE ONLY.
-    """
-    global _format
-    _format = api_format
-    with warnings.catch_warnings():
-        warnings.simplefilter('ignore')
-        ngs.set_format(api_format)
+with warnings.catch_warnings():
+    warnings.simplefilter('ignore')
+    ngs.set_format('json')
 
 # --------------------------------------------------------------------------------------------------
 def get_release_by_id(releaseid):
@@ -139,11 +128,7 @@ def get_release_by_id(releaseid):
     """
     incs = ['artists', 'artist-credits', 'artist-rels', 'recordings', 'recording-level-rels',
             'work-rels', 'work-level-rels', 'release-groups', 'labels', 'aliases']
-    result = ngs.get_release_by_id(releaseid, includes=incs)
-    if _format == 'json':
-        return result
-    else:
-        return result['release']
+    return ngs.get_release_by_id(releaseid, includes=incs)
 
 # --------------------------------------------------------------------------------------------------
 def get_recording_by_id(recordingid):
@@ -151,11 +136,7 @@ def get_recording_by_id(recordingid):
     Call the musicbrainz API and return recording information, including artist and work ARs.
     """
     incs = ['artist-rels', 'work-rels', 'aliases']
-    result = ngs.get_recording_by_id(recordingid, includes=incs)
-    if _format == 'json':
-        return result
-    else:
-        return result['recording']
+    return ngs.get_recording_by_id(recordingid, includes=incs)
 
 # --------------------------------------------------------------------------------------------------
 def get_work_by_id(workid, include_work_rels=False):
@@ -163,11 +144,7 @@ def get_work_by_id(workid, include_work_rels=False):
     Call the musicbrainz API and return work information, including artist ARs.
     """
     incs = ['artist-rels', 'work-rels', 'aliases']
-    result = ngs.get_work_by_id(workid, includes=incs)
-    if _format == 'json':
-        return result
-    else:
-        return result['work']
+    return ngs.get_work_by_id(workid, includes=incs)
 
 # --------------------------------------------------------------------------------------------------
 def get_artist_primary_alias(artist, locale='en'):
@@ -176,15 +153,12 @@ def get_artist_primary_alias(artist, locale='en'):
     an ArtistName named tuple with 'Artist' as the type.  If no primary locale alias is found, a
     tuple containing the original artist is returned.
     """
-    key = 'aliases' if _format == 'json' else 'alias-list'
-    primary_val = True if _format == 'json' else 'primary'
-    alias_name_key = 'name' if _format == 'json' else 'alias'
-    
-    if key in artist:
-        for alias in artist[key]:
-            if 'primary' in alias and alias['primary'] == primary_val:
+    if 'aliases' in artist:
+        for alias in artist['aliases']:
+            if 'primary' in alias and alias['primary'] == True:
                 if 'locale' in alias and alias['locale'] == locale:
-                    return ArtistName(alias[alias_name_key], alias['sort-name'])
+                    return ArtistName(alias['name'], alias['sort-name'])
+
     return ArtistName(artist['name'], artist['sort-name'])
 
 # --------------------------------------------------------------------------------------------------
@@ -232,10 +206,9 @@ def get_artist_relations(entity, locale='en'):
     musicbrainz API.  The result is a list of Relation named tuples.  A relation type that has no
     map will be excluded, and duplicates of the same type and artist are removed.
     """
-    key = 'relations' if _format == 'json' else 'artist-relation-list'
-    if key in entity:
+    if 'relations' in entity:
         # Map the relations to tag/name tuples.
-        return list(set(map_relations(entity[key], locale))) 
+        return list(set(map_relations(entity['relations'], locale))) 
     else:
         return []
 
@@ -246,10 +219,9 @@ def get_work_partof_works(work):
     a list of work objects.  Only examines subworks in the loaded metadata, and does not query the
     API.
     """
-    key = 'relations' if _format == 'json' else 'work-relation-list'
     result = []
-    if key in work:
-        for rel in work[key]:
+    if 'relations' in work:
+        for rel in work['relations']:
             if rel['type-id'] == _mbz_parts_id:
                 if 'direction' in rel and rel['direction'] == 'backward':
                     result.append(rel['work'])
@@ -293,9 +265,8 @@ def get_earliest_release(release):
     """
     earliest = None
     earliest_US = None
-    key = 'release-events' if _format == 'json' else 'release-event-list'
-    if key in release:
-        for event in release[key]:
+    if 'release-events' in release:
+        for event in release['release-events']:
             if 'date' in event:
                 if earliest is None or event['date'] < earliest:
                     earliest = event['date']
@@ -322,9 +293,8 @@ def get_release_catalognumber(release):
     Extract a label catalog number from a release returned by the musicbrainz API.  The result is a
     catalog number as a string or None if no catalog number was found.
     """
-    key = 'label-info' if _format == 'json' else 'label-info-list'
-    if key in release:
-        for label in release[key]:
+    if 'label-info' in release:
+        for label in release['label-info']:
             if 'catalog-number' in label:
                 return label['catalog-number']
     return None
@@ -335,9 +305,8 @@ def get_release_medium(release, number):
     Extract a medium by number from a release returned by the musicbrainz API.  The result is a
     musicbrainz API medium object.
     """
-    key = 'media' if _format == 'json' else 'medium-list'
-    if key in release:
-        for medium in release[key]:
+    if 'media' in release:
+        for medium in release['media']:
             if int(medium['position']) == int(number):
                 return medium
     return None
@@ -348,7 +317,6 @@ def get_medium_track(medium, number):
     Extract a track by number from a medium returned by the musicbrainz API.  The result is a
     musicbrainz API track object.
     """
-    key = 'tracks' if _format == 'json' else 'track-list'
     if 'tracks' in medium:
         for track in medium['tracks']:
             if int(track['position']) == int(number):
@@ -373,9 +341,8 @@ def get_recording_works(recording):
     list of musicbrainz API work objects.
     """
     result = []
-    key = 'relations' if _format == 'json' else 'work-relation-list'
-    if key in recording:
-        rels = recording[key]
+    if 'relations' in recording:
+        rels = recording['relations']
         return [r['work'] for r in rels if r['type-id'] == _mbz_performance_id]
     else:
         return []
