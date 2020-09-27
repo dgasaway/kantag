@@ -630,6 +630,7 @@ class ReleaseBuilder(_TagStoreBuilder):
 
         # All track data is now loaded.  Apply optional removing of non-ASCII punctuation.
         if self._options.ascii_punctuation:
+            # For titles.
             tags.apply_to_all('Album', textencoding.asciipunct)
             tags.apply_to_all('DiscSubtitle', textencoding.asciipunct)
             tags.apply_to_all('Title', textencoding.asciipunct)
@@ -637,6 +638,25 @@ class ReleaseBuilder(_TagStoreBuilder):
             tags.apply_to_all('Work', textencoding.asciipunct)
             tags.apply_to_all('Part', textencoding.asciipunct)
             tags.apply_to_all('Version', textencoding.asciipunct)
+            # And for myriad artist tags.
+            tags.apply_to_all('AlbumArtist', textencoding.asciipunct)
+            tags.apply_to_all('AlbumArtistSort', textencoding.asciipunct)
+            tags.apply_to_all('AlbumArtists', textencoding.asciipunct)
+            tags.apply_to_all('AlbumArtistsSort', textencoding.asciipunct)
+            tags.apply_to_all('Artist', textencoding.asciipunct)
+            tags.apply_to_all('ArtistSort', textencoding.asciipunct)
+            tags.apply_to_all('Composer', textencoding.asciipunct)
+            tags.apply_to_all('ComposerSort', textencoding.asciipunct)
+            tags.apply_to_all('Lyricist', textencoding.asciipunct)
+            tags.apply_to_all('LyricistSort', textencoding.asciipunct)
+            tags.apply_to_all('Writer', textencoding.asciipunct)
+            tags.apply_to_all('WriterSort', textencoding.asciipunct)
+            tags.apply_to_all('Arranger', textencoding.asciipunct)
+            tags.apply_to_all('ArrangerSort', textencoding.asciipunct)
+            tags.apply_to_all('Performer', textencoding.asciipunct)
+            tags.apply_to_all('PerformerSort', textencoding.asciipunct)
+            tags.apply_to_all('Conductor', textencoding.asciipunct)
+            tags.apply_to_all('ConductorSort', textencoding.asciipunct)
 
         return builder.track
 
