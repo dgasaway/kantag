@@ -218,7 +218,7 @@ def get_artists(entity, locale='en'):
     result = []
     if 'artist-credit' in entity:
         for ac in entity['artist-credit']:
-            if type(ac) == type(dict()) and 'artist' in ac:
+            if isinstance(ac, type(dict())) and 'artist' in ac:
                 artist = get_artist_primary_alias(ac['artist'], locale)
                 result.append(Relation('Artist', artist.name, artist.sortname))
     elif 'artist-credit-phrase' in entity:
