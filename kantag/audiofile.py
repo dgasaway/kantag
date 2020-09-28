@@ -95,7 +95,8 @@ def _break_ufid_frame(frame, tag):
     """
     Break a mutagen UFID ID3 frame into a list of TagValue named tuples.
     """
-    return [TagValue(tag, frame.data)]
+    # Note: Picard source does use ASCII encoding for UFID data.
+    return [TagValue(tag, frame.data.decode('ascii', 'ignore'))]
 
 # --------------------------------------------------------------------------------------------------
 def _break_apic_frame(frame, tag):
@@ -189,7 +190,8 @@ def _build_frame(tag, values):
         owner = frame.partition(':')[2]
         if len(values) > 1:
             raise exceptions.TaggingError('UFID owner not unique: ' + frame)
-        return mutagen.id3.UFID(encoding=3, owner=owner, data=values[0])
+        # Note: Picard source does use ASCII encoding for UFID data.
+        return mutagen.id3.UFID(encoding=3, owner=owner, data=values[0].encode('ascii'))
     elif frame.startswith('COMM:'):
         split = frame.split(':', 3)
         return mutagen.id3.COMM(encoding=3, desc=split[1], lang=split[2], text=values)
