@@ -379,6 +379,7 @@ def add_structured(builder, rel):
     builder.add_values_req(rel, 'Genre')
     builder.add_values(rel, 'Version')
     builder.add_values(rel, 'Comment')
+    builder.add_values(rel, 'Compilation')
 
     builder.add_comment('The following should be a unique identifier for the release (e.g., UPC or')
     builder.add_comment('catalog number) to allow clients to merge a multi-disc set.')

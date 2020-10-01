@@ -223,6 +223,7 @@ id3_write_map = {
     #     content descriptor."
     # 'Comment': 'COMM::eng', # having more than one with the same content
     'Comment': 'TXXX:COMMENT',
+    'Compilation': 'TCMP',
     'Composer': 'TCOM',
     'Conductor': 'TPE3',
     'Date': 'TDRC',
