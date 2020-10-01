@@ -142,17 +142,10 @@ def _break_frame(frame, ftype, warn):
         return [TagValue(ftype, repr(frame))]
 
 # --------------------------------------------------------------------------------------------------
-def _build_frame(tag, values):
+def _build_frame(tag, values, frame):
     """
     Build an mutagen ID3 frame from a tag name and associated values.
     """
-    if tag in tagmaps.id3_write_map:
-        frame = tagmaps.id3_write_map[tag]
-    elif tag == 'TCMP':
-        return mutagen.id3.TCMP(encoding=3, text=values)
-    else:
-        frame = 'TXXX:' + tag.upper()
-
     if frame == 'TALB':
         return mutagen.id3.TALB(encoding=3, text=values)
     elif frame == 'TPE1':
@@ -183,6 +176,8 @@ def _build_frame(tag, values):
         return mutagen.id3.TSOC(encoding=3, text=values)
     elif frame == 'TDOR':
         return mutagen.id3.TDOR(encoding=3, text=values)
+    elif frame == 'TCMP':
+        return mutagen.id3.TCMP(encoding=3, text=values)
     elif frame.startswith('TXXX:'):
         desc = frame.partition(':')[2]
         return mutagen.id3.TXXX(encoding=3, desc=desc, text=values)
@@ -198,8 +193,24 @@ def _build_frame(tag, values):
     else:
         raise exceptions.TaggingError('unexpected mapped frame encountered: ' + frame)
 
-    return None
+# --------------------------------------------------------------------------------------------------
+def _build_frames(tag, values):
+    """
+    Builds a list of ID3 frames from a tag name and associated values; multiple frames are created
+    only if the ID3 write map indicates multiple frames for the same tag.
+    """
+    if tag in tagmaps.id3_write_map:
+        frames = tagmaps.id3_write_map[tag]
+    elif tag == 'TCMP':
+        frames = 'TCMP'
+    else:
+        frames = 'TXXX:' + tag.upper()
 
+    if isinstance(frames, list):
+        return [_build_frame(tag, values, frame) for frame in frames]
+    else:
+        return [_build_frame(tag, values, frames)]
+    
 # --------------------------------------------------------------------------------------------------
 def _read_ogg(path, warn):
     """
@@ -317,13 +328,8 @@ def _write_mp3(path, tagset):
 
     afile.clear()
     for tag, values in tagset.items():
-        frame = _build_frame(tag, values)
-        if frame is not None:
+        for frame in _build_frames(tag, values):
             afile.add(frame)
-
-    # Assume compilation and write a TCMP frame if an albumartist is present.
-    #if u'AlbumArtist' in tags:
-    #    file.add(_build_frame('TCMP', '1'))
 
     afile.save(path)
 

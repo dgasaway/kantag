@@ -185,6 +185,7 @@ id3_read_map = {
     'TXXX:MUSICBRAINZ RELEASE TRACK ID': 'musicbrainz_releasetrackid',
     'UFID:HTTP://MUSICBRAINZ.ORG': 'musicbrainz_trackid',
     'TXXX:MUSICBRAINZ WORK ID': 'musicbrainz_workid',
+    'TXXX:MUSICBRAINZ TRACK ID': 'musicbrainz_trackid',
     'TXXX:MUSICBRAINZ_TRACKID': 'musicbrainz_trackid',
     'TXXX:REPLAYGAIN_ALBUM_PEAK': 'replaygain_album_peak',
     'TXXX:REPLAYGAIN_ALBUM_GAIN': 'replaygain_album_gain',
@@ -239,7 +240,7 @@ id3_write_map = {
     'musicbrainz_artistid': 'TXXX:MusicBrainz Artist Id',
     'musicbrainz_releasegroupid': 'TXXX:MusicBrainz Release Group Id',
     'musicbrainz_releasetrackid': 'TXXX:MusicBrainz Release Track Id',
-    'musicbrainz_trackid': 'UFID:http://musicbrainz.org',
+    'musicbrainz_trackid': ['UFID:http://musicbrainz.org', 'TXXX:MusicBrainz Track Id'],
     'musicbrainz_workid': 'TXXX:MusicBrainz Work Id',
     'replaygain_album_peak': 'TXXX:replaygain_album_peak',
     'replaygain_album_gain': 'TXXX:replaygain_album_gain',
@@ -317,7 +318,7 @@ _foobar_field_remap = (
     ['title', ['title', 'filename']]
     )
 
-# NOTE: comment, discnumber, and discsubtitle are not set by stock Picard.
+# NOTE: comment is not set by stock Picard.
 """ vcomment/ID3 map used by Musicbrainz Picard; for development reference only. """
 _picard_id3_map = {
     'album': 'TALB',
