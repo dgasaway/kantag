@@ -24,6 +24,7 @@ this::
     t 01-03,06 LyricistSort=Peart, Neil
 
     t 01 Title=2112
+    t 01 Work=2112
     t 01 Part=1. Overture
     t 01 Part=2. The Temples of Syrinx
     t 01 Part=3. Discovery
@@ -49,7 +50,7 @@ a set of audio files::
 The output would typically be retained as a file in the same folder as the audio
 files, as in the above example.  Then, the file can be edited by any available
 text editor, to meet the user's personal tastes.  Note, there are additional 
-tags recognized by by the *kantag* tools that are not necessary output by 
+tags recognized by the *kantag* tools that are not necessarily output by
 ``initkan``.  To write the tags back to the audio files, use ``applykan``::
 
     $ applykan -v tags.kan *.ogg
