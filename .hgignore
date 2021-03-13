@@ -5,4 +5,4 @@ syntax: regexp
 ^build$
 ^dist$
 ^MANIFEST$
-^kantag.egg-info$
+\.egg-info$

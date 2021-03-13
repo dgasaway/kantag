@@ -1,6 +1,6 @@
 # setup.py - kantag setup configuration.
 # Copyright (C) 2018 David Gasaway
-# https://bitbucket.org/dgasaway/kantag/
+# https://github.com/dgasaway/kantag
 
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU
 # General Public License as published by the Free Software Foundation; either version 2 of the
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License along with this program; if not,
 # see <http://www.gnu.org/licenses>.
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 import io
 from kantag._version import __version__
@@ -25,15 +25,22 @@ with io.open(os.path.join(basedir, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='kantag',
     version=__version__,
-    description='manage audio file metadata using external text files',
+    description='Manage audio file metadata using external text files.',
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     author='David Gasaway',
     author_email='dave@gasaway.org',
-    url='https://bitbucket.org/dgasaway/kantag',
-    download_url='https://bitbucket.org/dgasaway/kantag/downloads/',
+    url='https://github.com/dgasaway/kantag',
+    download_url='https://github.com/dgasaway/kantag/releases',
     license='GNU GPL v2',
-    packages=['kantag'],
-    scripts=['bin/applykan', 'bin/initkan', 'bin/showkan'],
+    packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'applykan = kantag.applykan:main',
+            'initkan = kantag.initkan:main',
+            'showkan = kantag.showkan:main',
+        ],
+    },
     python_requires='~=3.7',
     install_requires=[
         'mutagen >= 1.40',
