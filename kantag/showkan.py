@@ -18,11 +18,6 @@ import sys
 import os
 import argparse
 import pprint
-
-# Patch sys.path if running with source directory layout.
-parentdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-if os.path.exists(os.path.join(parentdir, 'kantag', '__init__.py')):
-    sys.path.insert(0, parentdir)
 from kantag.exceptions import TaggingError
 from kantag import audiofile
 from kantag._version import __version__

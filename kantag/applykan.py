@@ -21,11 +21,6 @@ import os
 import re
 import pprint
 from argparse import ArgumentParser
-
-# Patch sys.path if running with source directory layout.
-parentdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-if os.path.exists(os.path.join(parentdir, 'kantag', '__init__.py')):
-    sys.path.insert(0, parentdir)
 from kantag.tagfile import TagFileBuilder
 from kantag.util import ToggleAction
 from kantag.exceptions import TaggingError
