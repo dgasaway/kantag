@@ -20,7 +20,7 @@ import io
 import pprint
 import re
 import argparse
-import importlib
+import importlib.util
 from argparse import ArgumentParser
 from kantag.util import ToggleAction
 from kantag.exceptions import TaggingError
