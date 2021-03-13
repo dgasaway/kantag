@@ -54,3 +54,20 @@
     with the same tag/value will output with a single multi-track line instead
     of one line for each track.
   * Use MusicBrainz recording disambiguation as the Version tag, if available.
+
+2021-03-13, kantag v2.0.0
+  * Ported to Python 3; support for Python 2 has been dropped.
+  * Removal of non-ASCII punction is now also applied to artist names.
+  * Added an option to initkan to pass the MusicBrainz release ID on the command
+    line, rather than reading it exclusively from existing tags.
+  * Added support for Compilation tags.
+  * Added support for ISRC/TSRC tags.
+  * Added support for AcoustID tags.
+  * Added support for an AlbumVersion tag to distinguish between different
+    editions of the same album.
+  * Fixed handling of ID3V2 UFID tags used for MusicBrainz recording ids.  Also,
+    since foobar2000 doesn't support UFID tags, a TXXX:MusicBrainz Track ID tag
+    is also written to the file.
+  * All reading of ID3 tags is now case-insensitive.
+  * Fixed an exception generated when requesting MusicBrainz lookup when no
+    track number could be determined.
