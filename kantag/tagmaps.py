@@ -239,6 +239,7 @@ id3_write_map = {
     'musicbrainz_albumid': 'TXXX:MusicBrainz Album Id',
     'musicbrainz_albumartistid': 'TXXX:MusicBrainz Album Artist Id',
     'musicbrainz_artistid': 'TXXX:MusicBrainz Artist Id',
+    'musicbrainz_discid': 'TXXX:MusicBrainz Disc Id',
     'musicbrainz_releasegroupid': 'TXXX:MusicBrainz Release Group Id',
     'musicbrainz_releasetrackid': 'TXXX:MusicBrainz Release Track Id',
     'musicbrainz_trackid': ['UFID:http://musicbrainz.org', 'TXXX:MusicBrainz Track Id'],
@@ -279,10 +280,15 @@ mp4_map = {
     'work': 'work',
     'writer': 'writer',
     'writersort': 'writersort',
+    'MusicBrainz Disc Id': 'musicbrainz_disc_id',
+    'MusicBrainz Release Group Id': 'musicbrainz_releasegroupid',
+    'MusicBrainz Release Track Id': 'musicbrainz_releasetrackid',
+    'MusicBrainz Work Id': 'musicbrainz_workid',
     'replaygain_album_peak': 'replaygain_album_peak',
     'replaygain_album_gain': 'replaygain_album_gain',
     'replaygain_track_peak': 'replaygain_track_peak',
-    'replaygain_track_gain': 'replaygain_track_gain'
+    'replaygain_track_gain': 'replaygain_track_gain',
+    'Acoustid Id': 'acoustid_id'
 }
 
 """ vcomment/ID3 map used by foobar2000; for development reference only. """
