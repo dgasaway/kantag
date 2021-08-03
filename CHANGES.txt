@@ -71,3 +71,6 @@
   * All reading of ID3 tags is now case-insensitive.
   * Fixed an exception generated when requesting MusicBrainz lookup when no
     track number could be determined.
+
+???-??-??, kantag v?.?.?
+  * Fix mp4/m4a tag reading/writing.
