@@ -221,12 +221,12 @@ def add_composers(builder, entity, parent=None):
     """
     builder.add_values(entity, 'Composer', parent)
     builder.add_values(entity, 'ComposerSort', parent)
+    builder.add_values(entity, 'Writer', parent)
+    builder.add_values(entity, 'WriterSort', parent)
     builder.add_values(entity, 'Arranger', parent)
     builder.add_values(entity, 'ArrangerSort', parent)
     builder.add_values(entity, 'Lyricist', parent)
     builder.add_values(entity, 'LyricistSort', parent)
-    builder.add_values(entity, 'Writer', parent)
-    builder.add_values(entity, 'WriterSort', parent)
 
 # --------------------------------------------------------------------------------------------------
 def add_performers(builder, entity, parent=None):
@@ -402,7 +402,8 @@ def add_structured(builder, rel):
 
     # Composer/arranger/lyicist block.
     if args.artist_block or \
-        'Composer' in rel.tags or 'Arranger' in rel.tags or 'Lyricist' in rel.tags:
+        'Composer' in rel.tags or 'Arranger' in rel.tags or 'Lyricist' in rel.tags or \
+        'Writer' in rel.Tags:
         builder.add_comment('Composers')
     if args.classical and args.artist_block and rel.is_single_artist \
         and 'Composer' not in rel.tags:
