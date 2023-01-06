@@ -215,7 +215,7 @@ def get_artist_relations(entity, locale='en'):
 # --------------------------------------------------------------------------------------------------
 def get_work_partof_works(work):
     """
-    Extract the works of which the a work returned by the musicbrainz API is a part.  The result is
+    Extract the works of which the work returned by the musicbrainz API is a part.  The result is
     a list of work objects.  Only examines subworks in the loaded metadata, and does not query the
     API.
     """

@@ -482,6 +482,8 @@ class TrackBuilder(_TagStoreBuilder):
                         tags.append_unique('Work', parsed.work)
                     for part in parsed.parts:
                         tags.append_unique('Part', part)
+                else:
+                    tags.append_unique('Work', title)
             else:
                 tags.append_unique('Work', title)
 
