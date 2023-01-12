@@ -116,7 +116,7 @@ Relation = collections.namedtuple('Relation', 'type, name, sortname')
 ArtistName = collections.namedtuple('ArtistName', 'name, sortname')
 
 # Initialize the user agent.
-ngs.set_useragent('kantag', __version__, 'https://bitbucket.org/dgasaway/kantag/')
+ngs.set_useragent('kantag', __version__, 'https://github.com/dgasaway/kantag')
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
     ngs.set_format('json')
