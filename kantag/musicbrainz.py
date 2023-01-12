@@ -340,7 +340,6 @@ def get_recording_works(recording):
     Extract the works associated with a recording returned by the musicbrainz API.  The result is a
     list of musicbrainz API work objects.
     """
-    result = []
     if 'relations' in recording:
         rels = recording['relations']
         return [r['work'] for r in rels if r['type-id'] == _mbz_performance_id]
