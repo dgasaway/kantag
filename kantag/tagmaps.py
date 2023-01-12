@@ -287,6 +287,7 @@ mp4_map = {
     'MusicBrainz Disc Id': 'musicbrainz_disc_id',
     'MusicBrainz Release Group Id': 'musicbrainz_releasegroupid',
     'MusicBrainz Release Track Id': 'musicbrainz_releasetrackid',
+    'MusicBrainz Track Id' : 'musicbrainz_trackid',
     'MusicBrainz Work Id': 'musicbrainz_workid',
     'replaygain_album_peak': 'replaygain_album_peak',
     'replaygain_album_gain': 'replaygain_album_gain',
