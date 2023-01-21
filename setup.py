@@ -39,6 +39,7 @@ setup(
             'applykan = kantag.applykan:main',
             'initkan = kantag.initkan:main',
             'showkan = kantag.showkan:main',
+            'setrecording = kantag.setrecording:main'
         ],
     },
     python_requires='~=3.7',

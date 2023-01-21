@@ -135,7 +135,7 @@ def get_recording_by_id(recordingid):
     """
     Call the musicbrainz API and return recording information, including artist and work ARs.
     """
-    incs = ['artist-rels', 'work-rels', 'aliases']
+    incs = ['artists', 'artist-rels', 'work-rels', 'aliases']
     return ngs.get_recording_by_id(recordingid, includes=incs)
 
 # --------------------------------------------------------------------------------------------------
@@ -345,3 +345,11 @@ def get_recording_works(recording):
         return [r['work'] for r in rels if r['type-id'] == _mbz_performance_id]
     else:
         return []
+
+# --------------------------------------------------------------------------------------------------
+def get_recording_artists(recording):
+    """
+    Extract the works associated with a recording returned by the musicbrainz API.  The result is a
+    list of musicbrainz API work objects.
+    """
+    return [ac['artist'] for ac in recording['artist-credit']]
