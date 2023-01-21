@@ -228,6 +228,7 @@ id3_write_map = {
     'Comment': 'TXXX:COMMENT',
     'Compilation': 'TCMP',
     'Composer': 'TCOM',
+    'ComposerSort': 'TSOC',
     'Conductor': 'TPE3',
     'Date': 'TDRC',
     'DiscNumber': 'TPOS',
