@@ -168,6 +168,8 @@ class TagLine(object):
         elif self._line_type == 'a':
             return 'a %s=%s' % (self._tag, self._value)
         elif self._line_type == 'd' or self._line_type == 't':
+            if self._applies_to is None or len(self._applies_to) == 0:
+                print('warning: missing disc/track number for generated line', file=sys.stderr)
             return '%s %s %s=%s' % (self._line_type, self._applies_to, self._tag, self._value)
         else:
             raise exceptions.TagFileFormatError('Unexpected line type: ' + self._line_type)
@@ -306,10 +308,11 @@ class TagFileBuilder(object):
             elif isinstance(entity, Disc):
                 nums.append('%s' % entity.number)
             elif isinstance(entity, Track):
-                if parent is not None and parent.number is not None:
-                    nums.append('%s%s' % (parent.number, entity.number.zfill(2)))
-                else:
-                    nums.append('%s' % entity.number.zfill(2))
+                if entity.number is not None:
+                    if parent is not None and parent.number is not None:
+                        nums.append('%s%s' % (parent.number, entity.number.zfill(2)))
+                    else:
+                        nums.append('%s' % entity.number.zfill(2))
             else:
                 raise exceptions.TaggingError('Unexpected entity type: ' + str(type(entity)))
 
