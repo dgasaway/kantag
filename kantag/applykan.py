@@ -31,14 +31,14 @@ from kantag._version import __version__
 Set of tag names that will generate a warning if any given file does not contain at least one tag
 by that name.
 """
-_minimal_tags = frozenset([
+_minimal_tags = {
     'AlbumArtist', 'AlbumArtistSort', 'AlbumArtists', 'AlbumArtistsSort', 'Artist',
     'ArtistSort', 'Date', 'LabelId', 'Title', 'Performer', 'PerformerSort', 'TrackNumber',
     'musicbrainz_albumartistid', 'musicbrainz_albumid', 'musicbrainz_artistid',
     'musicbrainz_trackid',
     'replaygain_album_peak', 'replaygain_album_gain',
     'replaygain_track_peak', 'replaygain_track_gain'
-    ])
+    }
 """
 Map where sort names are stored in regular artist tags, and no non-sort names are stored.  For
 example, ARTIST=Beatles, The; ARTISTSORT=<undefined>.
@@ -97,6 +97,9 @@ def main():
         action='count', default=0)
     parser.add_argument('-p', '--pretend',
         help='do not modify the audio files',
+        action='store_true', default=False)
+    parser.add_argument('-1', '--single-file',
+        help='enable single file mode that does not require a track number',
         action='store_true', default=False)
     parser.add_argument('-P', '--path-regex',
         help='the regular expression used to determine disc and tracknumer from the '
@@ -228,7 +231,7 @@ def process_file(tagf, filename, args):
     # Use path and regex to get the disc/track number of the file.
     path = os.path.abspath(filename)
     (discnum, tracknum) = get_disc_track(args.path_regex, path)
-    if args.warn and tracknum is None:
+    if args.warn and tracknum is None and not args.single_file:
         print('warning: unable to determine track number from filename; file will be skipped',
             file=sys.stderr)
         return
@@ -248,6 +251,8 @@ def process_file(tagf, filename, args):
     if args.warn:
         # Use a set difference to find the missing tags.
         missing_tags = _minimal_tags - set(tags.keys())
+        if args.single_file:
+            missing_tags.discard('TrackNumber')
         if len(missing_tags) > 0:
             print('warning: file missing minimal tags: ' + ', '.join(missing_tags),
                 file=sys.stderr)
