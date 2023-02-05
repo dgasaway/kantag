@@ -47,7 +47,7 @@ def main():
         help='disable all warnings',
         action='store_false', dest='warn')
     parser.add_argument('audio_files',
-        help='audio files (Ogg Vorbis, MP3, FLAC)',
+        help='audio files (Ogg Vorbis, Ogg Opus, FLAC, MP3, M4A)',
         action='store', metavar='audio_file', nargs='+')
 
     args = parser.parse_args()

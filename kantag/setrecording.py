@@ -17,6 +17,7 @@
 import os
 import mutagen.id3
 import mutagen.oggvorbis
+import mutagen.oggopus
 import mutagen.easymp4
 import musicbrainzngs as ngs
 from pprint import pprint
@@ -34,7 +35,7 @@ def remove_key(dictionary, key):
         del(dictionary[k])
 
 # --------------------------------------------------------------------------------------------------
-def process_ogg_file(args):
+def process_vorbis_file(args):
     """
     Add MusicBrainz IDs to an Ogg file.
     """
@@ -63,6 +64,36 @@ def process_ogg_file(args):
     
     afile.save()
     
+# --------------------------------------------------------------------------------------------------
+def process_opus_file(args):
+    """
+    Add MusicBrainz IDs to an Ogg file.
+    """
+    rec = musicbrainz.get_recording_by_id(args.recording_id)
+    works = musicbrainz.get_recording_works(rec)
+    artists = musicbrainz.get_recording_artists(rec)
+        
+    afile = mutagen.oggopus.OggOpus(args.audio_file)
+    remove_key(afile, 'musicbrainz_trackid')
+    afile['musicbrainz_trackid'] = args.recording_id
+    
+    remove_key(afile, 'musicbrainz_artistid')
+    afile['musicbrainz_artistid'] = [artist['id'] for artist in artists]
+    
+    remove_key(afile, 'musicbrainz_workid')
+    if len(works) > 0:
+        afile['musicbrainz_workid'] = [work['id'] for work in works]
+    
+    if args.write_work and len(works) > 0:
+        remove_key(afile, 'work')
+        for work in works:
+            title = work['title']
+            if args.ascii_punctuation:
+                title = textencoding.asciipunct(title)
+            afile['work'] = title
+    
+    afile.save()
+
 # --------------------------------------------------------------------------------------------------
 def process_mp3_file(args):
     """
@@ -166,7 +197,9 @@ def process_file(args):
     """
     ext = os.path.splitext(args.audio_file)[1].lower()
     if ext == '.ogg':
-        return process_ogg_file(args)
+        return process_vorbis_file(args)
+    elif ext == '.opus':
+        return process_opus_file(args)
     elif ext == '.mp3':
         return process_mp3_file(args)
     elif ext == '.m4a':
@@ -193,7 +226,7 @@ def main():
         help='MusicBrainz identifier for the recording',
         action='store')
     parser.add_argument('audio_file',
-        help='audio file (Ogg Vorbis, MP3, FLAC)',
+        help='audio file (Ogg Vorbis, Ogg Opus, MP3, M4A)',
         action='store')
     parser.add_argument('-w', '--write_work',
         help='write Work tags [default=y]',

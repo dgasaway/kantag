@@ -90,7 +90,7 @@ def main():
     """
     parser = ArgumentParser(
         description='Reads the tag_file and applies the tags to the audio ' +
-        '(Ogg Vorbis, MP3, or FLAC) files.')
+        '(Ogg Vorbis, Ogg Opus, FLAC, MP3, or M4A) files.')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('-v', '--verbose',
         help='verbose output (can be specified up to three times)',
@@ -108,7 +108,7 @@ def main():
         help='kantag tag definition file, or "-" for STDIN',
         action='store')
     parser.add_argument('audio_files',
-        help='audio files (Ogg Vorbis, MP3, FLAC)',
+        help='audio files (Ogg Vorbis, Ogg Opus, FLAC, MP3, M4A)',
         action='store', metavar='audio_file', nargs='+')
 
     group = parser.add_argument_group(title='tag edit arguments')

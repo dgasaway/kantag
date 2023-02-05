@@ -16,6 +16,7 @@ import sys
 import os
 import mutagen.id3
 import mutagen.oggvorbis
+import mutagen.oggopus
 import mutagen.flac
 import mutagen.easymp4
 from . import tagmaps, exceptions
@@ -212,12 +213,26 @@ def _build_frames(tag, values):
         return [_build_frame(tag, values, frames)]
     
 # --------------------------------------------------------------------------------------------------
-def _read_ogg(path, warn):
+def _read_oggvorbis(path, warn):
     """
-    Read the existing tags from an ogg file, and return a list of TagValue named tuples.
+    Read the existing tags from an ogg voribs file, and return a list of TagValue named tuples.
     """
     result = []
     afile = mutagen.oggvorbis.OggVorbis(path)
+    for item in afile.tags:
+        tag = _map_tag(item[0], warn)
+        result.append(TagValue(tag, '<BINARY DATA>' if tag == 'EmbeddedImage' else item[1]))
+
+    return result
+    #return [TagValue(_map_tag(v[0], warn), v[1]) for v in afile.tags]
+
+# --------------------------------------------------------------------------------------------------
+def _read_oggopus(path, warn):
+    """
+    Read the existing tags from an ogg opus file, and return a list of TagValue named tuples.
+    """
+    result = []
+    afile = mutagen.oggopus.OggOpus(path)
     for item in afile.tags:
         tag = _map_tag(item[0], warn)
         result.append(TagValue(tag, '<BINARY DATA>' if tag == 'EmbeddedImage' else item[1]))
@@ -277,7 +292,9 @@ def read_raw(path, warn=True):
     """
     ext = os.path.splitext(path)[1].lower()
     if ext == '.ogg':
-        return _read_ogg(path, warn)
+        return _read_oggvorbis(path, warn)
+    if ext == '.opus':
+        return _read_oggopus(path, warn)
     elif ext == '.flac':
         return _read_flac(path, warn)
     elif ext == '.mp3':
@@ -295,11 +312,22 @@ def read(path, warn=True):
     return TagSet(read_raw(path, warn))
 
 # --------------------------------------------------------------------------------------------------
-def _write_ogg(path, tagset):
+def _write_oggvorbis(path, tagset):
     """
     Write tags from a TagSet to an ogg file.
     """
     afile = mutagen.oggvorbis.OggVorbis(path)
+    afile.clear()
+    for tag, values in tagset.items():
+        afile[tag.lower()] = values
+    afile.save()
+
+# --------------------------------------------------------------------------------------------------
+def _write_oggopus(path, tagset):
+    """
+    Write tags from a TagSet to an ogg file.
+    """
+    afile = mutagen.oggopus.OggOpus(path)
     afile.clear()
     for tag, values in tagset.items():
         afile[tag.lower()] = values
@@ -356,7 +384,9 @@ def write(path, tagset):
     """
     ext = os.path.splitext(path)[1].lower()
     if ext == '.ogg':
-        _write_ogg(path, tagset)
+        _write_oggvorbis(path, tagset)
+    elif ext == '.opus':
+        _write_oggopus(path, tagset)
     elif ext == '.flac':
         _write_flac(path, tagset)
     elif ext == '.mp3':
