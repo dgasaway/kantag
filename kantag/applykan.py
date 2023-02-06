@@ -32,13 +32,24 @@ Set of tag names that will generate a warning if any given file does not contain
 by that name.
 """
 _minimal_tags = {
-    'AlbumArtist', 'AlbumArtistSort', 'AlbumArtists', 'AlbumArtistsSort', 'Artist',
-    'ArtistSort', 'Date', 'LabelId', 'Title', 'Performer', 'PerformerSort', 'TrackNumber',
+    'AlbumArtist', 'AlbumArtistSort', 'AlbumArtists', 'AlbumArtistsSort', 'Artist', 'ArtistSort',
+    'Date', 'LabelId', 'Title', 'Performer', 'PerformerSort', 'TrackNumber', 'Genre',
     'musicbrainz_albumartistid', 'musicbrainz_albumid', 'musicbrainz_artistid',
     'musicbrainz_trackid',
     'replaygain_album_peak', 'replaygain_album_gain',
     'replaygain_track_peak', 'replaygain_track_gain'
     }
+
+"""
+Set of tag names that will generate a warning in single file mode if any given file does not contain
+at least one tag by that name.
+"""
+_single_file_minimal_tags = {
+    'Artist', 'ArtistSort', 'Date', 'Title', 'Performer', 'PerformerSort', 'Genre',
+    'musicbrainz_artistid', 'musicbrainz_trackid',
+    'replaygain_track_peak', 'replaygain_track_gain'
+    }
+
 """
 Map where sort names are stored in regular artist tags, and no non-sort names are stored.  For
 example, ARTIST=Beatles, The; ARTISTSORT=<undefined>.
@@ -250,9 +261,10 @@ def process_file(tagf, filename, args):
     # Check for essential tags.
     if args.warn:
         # Use a set difference to find the missing tags.
-        missing_tags = _minimal_tags - set(tags.keys())
         if args.single_file:
-            missing_tags.discard('TrackNumber')
+            missing_tags = _single_file_minimal_tags - set(tags.keys())
+        else:
+            missing_tags = _minimal_tags - set(tags.keys())
         if len(missing_tags) > 0:
             print('warning: file missing minimal tags: ' + ', '.join(missing_tags),
                 file=sys.stderr)
