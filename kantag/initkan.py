@@ -111,6 +111,9 @@ def main():
     group.add_argument('-M', '--call-musicbrainz',
         help='enable calls to the musicbrainz web service [default=n]',
         action=ToggleAction, choices=['y', 'n'], default=False)
+    parser.add_argument('-1', '--single-file',
+        help='enable single file mode that does not generate tags that only apply to albums',
+        action='store_true', default=False)
     group.add_argument('--release-mbid',
         help='unique id of the release to lookup in the musicbrainz database; optional if an id is '
         'present in the existing tags, but given preference over a tag value',
@@ -376,19 +379,24 @@ def add_structured(builder, rel):
     builder.add_values(rel, 'Comment')
     builder.add_values(rel, 'Compilation')
 
-    builder.add_comment('The following should be a unique identifier for the release (e.g., UPC or')
-    builder.add_comment('catalog number) to allow clients to merge a multi-disc set.')
-    if 'LabelId' in rel.tags:
-        builder.add_values(rel, 'LabelId')
-    elif 'Barcode' in rel.tags:
-        builder.add_values_as(rel, 'Barcode', 'LabelId')
-    elif 'CatalogNumber' in rel.tags:
-        builder.add_values_as(rel, 'CatalogNumber', 'LabelId')
-    elif 'ASIN' in rel.tags:
-        builder.add_values_as(rel, 'ASIN', 'LabelId')
+    if args.single_file:
+        builder.add_blank()
     else:
-        builder.add_value(rel, 'LabelId', '')
-    builder.add_blank()
+        builder.add_comment(
+            'The following should be a unique identifier for the release (e.g., UPC or')
+        builder.add_comment(
+            'catalog number) to allow clients to merge a multi-disc set.')
+        if 'LabelId' in rel.tags:
+            builder.add_values(rel, 'LabelId')
+        elif 'Barcode' in rel.tags:
+            builder.add_values_as(rel, 'Barcode', 'LabelId')
+        elif 'CatalogNumber' in rel.tags:
+            builder.add_values_as(rel, 'CatalogNumber', 'LabelId')
+        elif 'ASIN' in rel.tags:
+            builder.add_values_as(rel, 'ASIN', 'LabelId')
+        else:
+            builder.add_value(rel, 'LabelId', '')
+        builder.add_blank()
 
     # Print disc and track artists in an artists block if requested.
     if args.artist_block and not rel.is_single_artist:
