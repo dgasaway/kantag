@@ -205,7 +205,9 @@ general_read_map = {
     'djmixer': 'Arranger',
     'disctotal': 'TotalDiscs',
     'tracktotal': 'TotalTracks',
-    'metadata_block_picture': 'EmbeddedImage'
+    'metadata_block_picture': 'EmbeddedImage',
+    'r128_track_gain' : 'replaygain_track_gain',
+    'r128_album_gain' : 'replaygain_album_gain'
     }
 
 """ Map TIPL involvements to kantag name. """
@@ -295,6 +297,18 @@ mp4_map = {
     'replaygain_track_peak': 'replaygain_track_peak',
     'replaygain_track_gain': 'replaygain_track_gain',
     'Acoustid Id': 'acoustid_id'
+}
+
+""" Additional cannonical to Vorbis map. """
+vorbis_write_map = { }
+
+""" Additional cannonical to FLAC map. """
+flac_write_map = { }
+
+""" Additional cannonical to Opus map. """
+opus_write_map = {
+    'replaygain_track_gain' : 'R128_TRACK_GAIN',
+    'replaygain_album_gain' : 'R128_ALBUM_GAIN'
 }
 
 """ vcomment/ID3 map used by foobar2000; for development reference only. """

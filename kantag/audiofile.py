@@ -319,7 +319,11 @@ def _write_oggvorbis(path, tagset):
     afile = mutagen.oggvorbis.OggVorbis(path)
     afile.clear()
     for tag, values in tagset.items():
-        afile[tag.lower()] = values
+        if tag in tagmaps.vorbis_write_map:
+            tag = tagmaps.vorbis_write_map[tag]
+        else:
+            tag = tag.lower()
+        afile[tag] = values
     afile.save()
 
 # --------------------------------------------------------------------------------------------------
@@ -330,7 +334,11 @@ def _write_oggopus(path, tagset):
     afile = mutagen.oggopus.OggOpus(path)
     afile.clear()
     for tag, values in tagset.items():
-        afile[tag.lower()] = values
+        if tag in tagmaps.opus_write_map:
+            tag = tagmaps.opus_write_map[tag]
+        else:
+            tag = tag.lower()
+        afile[tag] = values
     afile.save()
 
 # --------------------------------------------------------------------------------------------------
@@ -341,7 +349,11 @@ def _write_flac(path, tagset):
     afile = mutagen.flac.FLAC(path)
     afile.clear()
     for tag, values in tagset.items():
-        afile[tag.lower()] = values
+        if tag in tagmaps.flac_write_map:
+            tag = tagmaps.flac_write_map[tag]
+        else:
+            tag = tag.lower()
+        afile[tag] = values
     afile.save()
 
 # --------------------------------------------------------------------------------------------------
