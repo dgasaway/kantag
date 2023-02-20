@@ -411,7 +411,7 @@ def add_structured(builder, rel):
     # Composer/arranger/lyicist block.
     if args.artist_block or \
         'Composer' in rel.tags or 'Arranger' in rel.tags or 'Lyricist' in rel.tags or \
-        'Writer' in rel.Tags:
+        'Writer' in rel.tags:
         builder.add_comment('Composers')
     if args.classical and args.artist_block and rel.is_single_artist \
         and 'Composer' not in rel.tags:
