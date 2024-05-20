@@ -62,6 +62,7 @@ cannonical_tags = frozenset([
     'Conductor',
     'ConductorSort',
     'CoverNumber',
+    'Damaged',
     'Date',
     'DiscNumber',
     'DiscSubtitle',
