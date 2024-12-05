@@ -220,7 +220,7 @@ tipl_map = {
 """ Map kantag name to ID3 frame. """
 id3_write_map = {
     'Album': 'TALB',
-    'AlbumArtist': 'TXXX:ALBUM ARTIST',
+    'AlbumArtist': 'TPE2',
     'Artist': 'TPE1',
     'ArtistSort': 'TSOP',
     # Having more than one COMM with the same content descriptor (third descriptor, after
