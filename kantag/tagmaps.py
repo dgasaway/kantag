@@ -21,13 +21,12 @@
 # TDRL 'when the audio was first released'
 # Foobar: "The TDRC frame is officially to be used for the recording time, TDRL
 #          is for the release time but TDRC is generally used by most programs."
-# http://wiki.musicbrainz.org/MusicBrainz_Picard/Tags/Mapping
-# http://musicbrainz.org/doc/Picard_Tag_Mapping
-# http://musicbrainz.org/doc/MusicBrainzTag
-# http://wiki.hydrogenaudio.org/index.php?title=Foobar2000:ID3_Tag_Mapping
-# http://wiki.hydrogenaudio.org/index.php?title=Foobar2000:Encouraged_Tag_Standards#ALBUM_ARTIST
-# http://wiki.hydrogenaudio.org/index.php?title=Foobar2000:Title_Formatting_Reference#Field_remappings
-# http://code.google.com/p/mutagen/source/browse/trunk/mutagen/easyid3.py
+# https://picard-docs.musicbrainz.org/en/appendices/tag_mapping.html
+# https://wiki.hydrogenaud.io/index.php?title=Foobar2000:ID3_Tag_Mapping
+# https://wiki.hydrogenaud.io/index.php?title=Foobar2000:Metadata_Compatibility_1.1.6_changes
+# https://wiki.hydrogenaud.io/index.php?title=Foobar2000:Encouraged_Tag_Standards#ALBUM_ARTIST
+# https://wiki.hydrogenaud.io/index.php?title=Foobar2000:Title_Formatting_Reference#Field_remappings
+# https://github.com/quodlibet/mutagen/blob/main/mutagen/easyid3.py
 # http://www.id3.org/id3v2.4.0-frames
 # http://www.id3.org/id3v2.4.0-structure
 # http://forums.musicbrainz.org/viewtopic.php?id=2359
@@ -311,105 +310,3 @@ opus_write_map = {
     'replaygain_track_gain' : 'R128_TRACK_GAIN',
     'replaygain_album_gain' : 'R128_ALBUM_GAIN'
 }
-
-""" vcomment/ID3 map used by foobar2000; for development reference only. """
-_foobar_id3_map = {
-    'album': 'TALB',
-    'albumartist': 'TXXX:ALBUM ARTIST',
-    'artist': 'TPE1',
-    'artistsortorder': 'TSOP', # This causes problems for mixed vcomment/mp3 fb2k library
-    'discnumber': 'TPOS',
-    'band': 'TPE2',
-    'comment': 'COMM',
-    'composer': 'TCOM',
-    'conductor': 'TPE3',
-    'date': 'TDRC', # also, TXXX:DATE
-    'discnumber': 'TPOS',
-    'genre': 'TCON',
-    'tracknumber': 'TRCK',
-    'remixed by': 'TPE4',
-    'lyricist': 'TEXT',
-    'subtitle': 'TIT3',
-    'replaygain_album_peak': 'TXXX:replaygain_album_peak',
-    'replaygain_album_gain': 'TXXX:replaygain_album_gain',
-    'replaygain_track_peak': 'TXXX:replaygain_track_peak',
-    'replaygain_track_gain': 'TXXX:replaygain_track_gain',
-    # Anything not explicitly listed maps to TXXX:<WHATEVER>
-    }
-
-""" Tag remaps used by foobar2000; for development reference only. """
-_foobar_field_remap = (
-    ['album artist', ['album artist', 'artist', 'composer', 'performer', 'albumartist']],
-    ['album', ['album', 'venue']],
-    ['artist', ['artist', 'album artist', 'composer', 'performer']],
-    ['discnumber', ['discnumber', 'disc']],
-    ['title', ['title', 'filename']]
-    )
-
-# NOTE: comment is not set by stock Picard.
-""" vcomment/ID3 map used by Musicbrainz Picard; for development reference only. """
-_picard_id3_map = {
-    'album': 'TALB',
-    'albumartist': 'TPE2',
-    'albumartistsort': 'TXXX:ALBUMARTISTSORT',
-    'arranger': 'TIPL:arranger',
-    'artist': 'TPE1',
-    'artistsort': 'TSOP',
-    'asin': 'TXXX:ASIN',
-    'barcode': 'TXXX:BARCODE',
-    'catalognumber': 'TXXX:CATALOGNUMBER',
-    'composer': 'TCOM',
-    'comment': 'COMM:description',
-    'compilation': 'TCMP',
-    'conductor': 'TPE3',
-    'date': 'TDRC',
-    'discnumber': 'TPOS',
-    'discsubtitle': 'TSST',
-    'djmixer': 'TIPL:DJ-mix',
-    'engineer': 'TIPL:engineer',
-    'label': 'TPUB',
-    'language': 'TLAN',
-    'lyricist': 'TEXT',
-    'mixer': 'TIPL:mix',
-    'originaldate': 'TDOR',
-    'performer': 'TMCL:instrument',
-    'producer': 'TIPL:producer',
-    'remixer': 'TPE4',
-    'subtitle': 'TIT3',
-    'title': 'TIT2',
-    'tracknumber': 'TRCK',
-    'writer': 'TXXX:writer',
-    'musicbrainz_trackid': 'UFID:http://musicbrainz.org',
-    'musicbrainz_albumid': 'TXXX:MusicBrainz Album Id',
-    'musicbrainz_artistid': 'TXXX:MusicBrainz Artist Id',
-    'musicbrainz_albumartistid': 'TXXX:MusicBrainz Album Artist Id',
-    'musicbrainz_workid': 'TXXX:MusicBrainz Work Id'
-    }
-
-""" vcomment/ID3 map used by mutagen; for development reference only. """
-_mutagen_easyid3_map = {
-    'genre': 'TCON',
-    'date': 'TDRC',
-    'performer:role': 'TMCL:role',
-    'album': 'TALB',
-    'composer': 'TCOM',
-    'lyricist': 'TEXT',
-    'title': 'TIT2',
-    'version': 'TIT3',
-    'artist': 'TPE1',
-    'performer': 'TPE2',
-    'conductor': 'TPE3',
-    'arranger': 'TPE4',
-    'discnumber': 'TPOS',
-    'tracknumber': 'TRCK',
-    'composersort': 'TSOC', # iTunes extension
-    'artistsort': 'TSOP',
-    'discsubtitle': 'TSST',
-    'albumartistsort': 'TXXX:ALBUMARTISTSORT', # also TSO2, iTunes extension
-    'barcode': 'TXXX:BARCODE',
-    'musicbrainz_trackid': 'UFID:http://musicbrainz.org',
-    'musicbrainz_albumid': 'TXXX:MusicBrainz Album Id',
-    'musicbrainz_artistid': 'TXXX:MusicBrainz Artist Id',
-    'musicbrainz_albumartistid': 'TXXX:MusicBrainz Album Artist Id',
-    'musicbrainz_discid': 'TXXX:MusicBrainz Disc Id'
-    }
