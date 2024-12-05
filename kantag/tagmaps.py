@@ -220,6 +220,7 @@ tipl_map = {
 id3_write_map = {
     'Album': 'TALB',
     'AlbumArtist': 'TPE2',
+    'AlbumArtistSort': 'TSO2',
     'Artist': 'TPE1',
     'ArtistSort': 'TSOP',
     # Having more than one COMM with the same content descriptor (third descriptor, after

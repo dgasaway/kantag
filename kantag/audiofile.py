@@ -153,6 +153,8 @@ def _build_frame(tag, values, frame):
         return mutagen.id3.TPE1(encoding=3, text=values)
     elif frame == 'TPE2':
         return mutagen.id3.TPE2(encoding=3, text=values)
+    elif frame == 'TSO2':
+        return mutagen.id3.TSO2(encoding=3, text=values)
     elif frame == 'TCOM':
         return mutagen.id3.TCOM(encoding=3, text=values)
     elif frame == 'TPE3':
