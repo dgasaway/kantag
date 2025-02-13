@@ -18,6 +18,7 @@ import sys
 import os
 import argparse
 import pprint
+from kantag.util import expand_globs
 from kantag.exceptions import TaggingError
 from kantag import audiofile
 from kantag._version import __version__
@@ -56,10 +57,8 @@ def main():
         print('<Arguments>')
         print(pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n')
 
-    # Check for valid files.
-    for audio_file in args.audio_files:
-        if not os.path.exists(audio_file):
-            parser.error('invalid file: ' + audio_file)
+    # Expand any glob patterns left by the shell.
+    args.audio_files = expand_globs(args.audio_files)
 
     # Write the output.
     try:

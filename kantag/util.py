@@ -12,10 +12,12 @@
 #
 # You should have received a copy of the GNU General Public License along with this program; if not,
 # see <http://www.gnu.org/licenses>.
+import os
 import collections
 import argparse
 import re
-
+import glob
+from . import exceptions
 
 class ToggleAction(argparse.Action):
     """
@@ -133,3 +135,22 @@ def condense_ranges(nums):
 
     return ','.join(ranges)
 
+# --------------------------------------------------------------------------------------------------
+def expand_globs(audio_files):
+    """
+    Expand globs in a list of audio file specifications to a list of file names.
+    """
+    # It would be nice to raise an error if the list contains a file name (pattern without wildcard)
+    # that matches no file, while silently ignoring something like '*.mp3' that matches no file.
+    # However, iglob() will return an empty list in either scenario, and we have no practical way to
+    # check if the path contains a wildcard.
+    new_audio_files = []
+    for audio_file in audio_files:
+        # Avoid the glob if it's a legitimate file name.
+        if os.path.exists(audio_file):
+            new_audio_files.append(audio_file)
+        else:
+            for new_audio_file in glob.iglob(audio_file):
+                new_audio_files.append(new_audio_file)
+    return sorted(new_audio_files)
+    

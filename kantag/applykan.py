@@ -22,7 +22,7 @@ import re
 import pprint
 from argparse import ArgumentParser
 from kantag.tagfile import TagFileBuilder
-from kantag.util import ToggleAction
+from kantag.util import ToggleAction, expand_globs
 from kantag.exceptions import TaggingError
 from kantag import audiofile
 from kantag._version import __version__
@@ -162,9 +162,11 @@ def main():
     # Check for some files to build tags for.
     if args.tag_file != '-' and not os.path.exists(args.tag_file):
         parser.error('tag file not found: ' + args.tag_file)
-    for audio_file in args.audio_files:
-        if not os.path.exists(audio_file):
-            parser.error('audio file not found: ' + audio_file)
+
+    # Expand any glob patterns left by the shell.
+    args.audio_files = expand_globs(args.audio_files)
+    if (len(args.audio_files) == 0):
+        parser.error('no matching audio files found')
 
     # Write the output.
     try:
