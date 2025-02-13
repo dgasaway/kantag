@@ -21,6 +21,7 @@ import os
 import re
 import pprint
 from argparse import ArgumentParser
+from pathlib import Path
 from kantag import util
 from kantag.tagfile import TagFileBuilder
 from kantag.util import ToggleAction
@@ -173,17 +174,22 @@ def parse_args():
 
     args = parser.parse_args()
 
-    # Check for a tag file.
-    if args.tag_file != '-' and not os.path.isfile(args.tag_file):
+    # Check for tags to read.
+    if args.tag_file == '-':
+        sys.stdin.reconfigure(encoding='utf-8')
+    elif os.path.isfile(args.tag_file):
+        args.tag_file = Path(args.tag_file)
+    else:
         parser.error('tag file not found: ' + args.tag_file)
 
     # By default, tags are applied to all supported audio files in the directory containing the
     # tags file.  Otherwise, files must be provided.  However, in some cases, e.g., globs may not
     # have been expanded by the shell.  In the end, args.audio_files will have pathlib objects.
-    if len(args.audio_files) == 0 and args.tag_file != '-':
-        args.audio_files = util.get_supported_audio_files(os.path.dirname(args.tag_file))
-    else:
+    if len(args.audio_files) > 0:
         args.audio_files = util.expand_globs(args.audio_files)
+    elif args.tag_file != '-':
+        args.audio_files = util.get_supported_audio_files(os.path.dirname(args.tag_file))
+
     # If we still don't have audio files, there's nothing to do.
     if (len(args.audio_files) == 0):
         parser.error('no matching audio files found')
@@ -301,7 +307,7 @@ def process_files(args):
     in the file that were not used (usually a sign of a tag file issue).
     """
     if args.tag_file == '-':
-        reader = codecs.getreader('utf-8')(sys.stdin)
+        reader = sys.stdin
     else:
         reader = io.open(args.tag_file, mode='rt', encoding='utf-8')
 
