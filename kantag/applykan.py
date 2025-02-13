@@ -21,8 +21,9 @@ import os
 import re
 import pprint
 from argparse import ArgumentParser
+from kantag import util
 from kantag.tagfile import TagFileBuilder
-from kantag.util import ToggleAction, expand_globs
+from kantag.util import ToggleAction
 from kantag.exceptions import TaggingError
 from kantag import audiofile
 from kantag._version import __version__
@@ -97,7 +98,23 @@ _sort_and_nonsort_names_map = {
 # --------------------------------------------------------------------------------------------------
 def main():
     """
-    Parse command line argument and initiate main operation.
+    Parse the command line arguments and initiate main operation.
+    """
+    args = parse_args()
+    if args.verbose >= 3:
+        print('<Arguments>')
+        print(pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n')
+
+    try:
+        process_files(args)
+    except TaggingError as e:
+        print('An exception occurred:\n' + ';'.join(e.args), file=sys.stderr)
+        exit(2)
+
+# --------------------------------------------------------------------------------------------------
+def parse_args():
+    """
+    Parse and return the command line arguments.
     """
     parser = ArgumentParser(
         description='Reads the tag_file and applies the tags to the audio ' +
@@ -122,8 +139,9 @@ def main():
         help='kantag tag definition file, or "-" for STDIN',
         action='store')
     parser.add_argument('audio_files',
-        help='audio files (Ogg Vorbis, Ogg Opus, FLAC, MP3, M4A)',
-        action='store', metavar='audio_file', nargs='+')
+        help='audio files (Ogg Vorbis, Ogg Opus, FLAC, MP3, M4A); if not provided, writes the '
+        'tags to the supported audio files in the folder containing `tag_file`',
+        action='store', metavar='audio_file', nargs='*')
 
     group = parser.add_argument_group(title='tag edit arguments')
     group.add_argument('-w', '--work-title',
@@ -155,25 +173,22 @@ def main():
 
     args = parser.parse_args()
 
-    if args.verbose >= 3:
-        print('<Arguments>')
-        print(pprint.PrettyPrinter(indent=2).pformat(vars(args)) + '\n')
-
-    # Check for some files to build tags for.
-    if args.tag_file != '-' and not os.path.exists(args.tag_file):
+    # Check for a tag file.
+    if args.tag_file != '-' and not os.path.isfile(args.tag_file):
         parser.error('tag file not found: ' + args.tag_file)
 
-    # Expand any glob patterns left by the shell.
-    args.audio_files = expand_globs(args.audio_files)
+    # By default, tags are applied to all supported audio files in the directory containing the
+    # tags file.  Otherwise, files must be provided.  However, in some cases, e.g., globs may not
+    # have been expanded by the shell.  In the end, args.audio_files will have pathlib objects.
+    if len(args.audio_files) == 0 and args.tag_file != '-':
+        args.audio_files = util.get_supported_audio_files(os.path.dirname(args.tag_file))
+    else:
+        args.audio_files = util.expand_globs(args.audio_files)
+    # If we still don't have audio files, there's nothing to do.
     if (len(args.audio_files) == 0):
         parser.error('no matching audio files found')
 
-    # Write the output.
-    try:
-        process_files(args)
-    except TaggingError as e:
-        print('An exception occurred:\n' + ';'.join(e.args), file=sys.stderr)
-        exit(2)
+    return args
 
 # --------------------------------------------------------------------------------------------------
 def disc_track_regex():

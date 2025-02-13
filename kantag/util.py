@@ -17,8 +17,13 @@ import collections
 import argparse
 import re
 import glob
+from pathlib import Path
 from . import exceptions
 
+""" List of extensions for which kantag can read/write tags. """
+supported_file_extensions = ['.ogg', '.opus', '.flac', 'mp3', '.m4a']
+
+# --------------------------------------------------------------------------------------------------
 class ToggleAction(argparse.Action):
     """
     An argparse Action that will convert a y/n arg value into True/False.
@@ -136,21 +141,32 @@ def condense_ranges(nums):
     return ','.join(ranges)
 
 # --------------------------------------------------------------------------------------------------
-def expand_globs(audio_files):
+def expand_globs(files):
     """
-    Expand globs in a list of audio file specifications to a list of file names.
+    Convert a list of file specifications to a list of Path objects with any globs expanded.
     """
     # It would be nice to raise an error if the list contains a file name (pattern without wildcard)
     # that matches no file, while silently ignoring something like '*.mp3' that matches no file.
     # However, iglob() will return an empty list in either scenario, and we have no practical way to
-    # check if the path contains a wildcard.
-    new_audio_files = []
-    for audio_file in audio_files:
-        # Avoid the glob if it's a legitimate file name.
-        if os.path.exists(audio_file):
-            new_audio_files.append(audio_file)
+    # check if the path contains a wildcard.  Even though we're returning pathlib objects, we don't
+    # use Path.glob() because it has some undesirable behavior for this purpose, like recursion and
+    # issues with absolute paths.
+    results  = []
+    for file in files:
+        if os.path.isfile(file):
+            results.append(Path(file))
         else:
-            for new_audio_file in glob.iglob(audio_file):
-                new_audio_files.append(new_audio_file)
-    return sorted(new_audio_files)
+            for f in glob.iglob(file):
+                results.append(Path(f))
+    return sorted(results);
     
+# --------------------------------------------------------------------------------------------------
+def get_supported_audio_files(dir):
+    """
+    Return a list of Path objects for files contained in the specified directory with the supported
+    file extensions.
+    """
+    # We construct this to return relative paths from the start so we don't have to make them
+    # relative.  Also, we only want to iterate the files in the folder once.
+    files = [f for f in Path(dir).iterdir() if f.suffix in supported_file_extensions]
+    return sorted(files)
