@@ -21,7 +21,7 @@ from pathlib import Path
 from . import exceptions
 
 """ List of extensions for which kantag can read/write tags. """
-supported_file_extensions = ['.ogg', '.opus', '.flac', 'mp3', '.m4a']
+supported_file_extensions = ['.ogg', '.opus', '.flac', '.mp3', '.m4a']
 
 # --------------------------------------------------------------------------------------------------
 class ToggleAction(argparse.Action):

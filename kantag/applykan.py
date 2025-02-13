@@ -188,7 +188,7 @@ def parse_args():
     if len(args.audio_files) > 0:
         args.audio_files = util.expand_globs(args.audio_files)
     elif args.tag_file != '-':
-        args.audio_files = util.get_supported_audio_files(os.path.dirname(args.tag_file))
+        args.audio_files = util.get_supported_audio_files(args.tag_file.parent)
 
     # If we still don't have audio files, there's nothing to do.
     if (len(args.audio_files) == 0):
