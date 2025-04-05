@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language name="Kantag metadata" author="David Gasaway (dave@gasaway.org)" version="1" kateversion="5.0" section="Other" mimetype="application/x-kantag" extensions="*.kan">
+    <highlighting>
+        <list name="artistNameTags">
+            <item>Artist</item>
+            <item>AlbumArtist</item>
+            <item>AlbumArtists</item>
+            <item>Composer</item>
+            <item>Lyricist</item>
+            <item>Arranger</item>
+            <item>Writer</item>
+            <item>Performer</item>
+            <item>Conductor</item>
+        </list>
+        <list name="artistSortNameTags">
+            <item>ArtistSort</item>
+            <item>AlbumArtistSort</item>
+            <item>AlbumArtistsSort</item>
+            <item>ComposerSort</item>
+            <item>WriterSort</item>
+            <item>LyricistSort</item>
+            <item>ArrangerSort</item>
+            <item>PerformerSort</item>
+            <item>ConductorSort</item>
+        </list>
+        <list name="replayGainTags">
+            <item>replaygain_album_gain </item>
+            <item>replaygain_album_peak </item>
+            <item>replaygain_track_gain</item>
+            <item>replaygain_track_peak </item>
+        </list>
+        <list name="musicbrainzTags">
+            <item>musicbrainz_albumartistid</item>
+            <item>musicbrainz_albumid</item>
+            <item>musicbrainz_artistid</item>
+            <item>musicbrainz_discid</item>
+            <item>musicbrainz_releasegroupid</item>
+            <item>musicbrainz_releasetrackid</item>
+            <item>musicbrainz_trackid</item>
+            <item>musicbrainz_workid</item>
+            <item>acoustid_id</item>
+        </list>
+        <list name="specialArtistNames">
+            <item>[anonymous]</item>
+            <item>[traditional]</item>
+            <item>[no artist]</item>
+            <item>[data]</item>
+            <item>[dialog]</item>
+            <item>[unknown]</item>
+            <item>[theatre]</item>
+            <item>[soundtrack]</item>
+        </list>
+        <contexts>
+            <context name="Start" attribute="Normal" lineEndContext="#stay">
+                <DetectChar char="#" column="0" attribute="Comment" context="Comment" />
+                <Detect2Chars char="a" char1=" " column="0" attribute="Scope" context="TagName" />
+                <Detect2Chars char="d" char1=" " column="0" attribute="Scope" context="ScopeList" />
+                <Detect2Chars char="t" char1=" " column="0" attribute="Scope" context="ScopeList" />
+            </context>
+            <context name="Comment" attribute="Comment" lineEndContext="Start">
+                <DetectSpaces attribute="Comment" />
+                <IncludeRules context="##Comments" />
+                <DetectIdentifier attribute="Comment" />
+            </context>
+            <context name="ScopeList" attribute="Normal" lineEndContext="Start">
+                <Int attribute="Num" />
+                <AnyChar String=",-" attribute="Operator" />
+                <DetectChar char=" " context="TagName" />
+            </context>
+            <context name="TagName" attribute="TagName" lineEndContext="Start">
+                <keyword String="artistNameTags" attribute="ArtistNameTag" />
+                <keyword String="artistSortNameTags" attribute="ArtistSortNameTag" />
+                <!--
+                <keyword String="replayGainTags" attribute="SpecialTags" />
+                <keyword String="musicbrainzTags" attribute="SpecialTags" />
+                -->
+                <DetectChar char="=" attribute="Operator" context="TagValue" />
+            </context>
+            <context name="TagValue" attribute="TagValue" lineEndContext="Start">
+                <!--
+                <RegExpr String="\b\d\d\d\d-\d\d-\d\d\b" attribute="Date" />
+                -->
+                <keyword String="specialArtistNames" attribute="SpecialName" weakDeliminator="[]" />
+            </context>
+        </contexts>
+        <itemDatas>
+            <itemData name="Normal" defStyleNum="dsNormal" />
+            <itemData name="Comment" defStyleNum="dsComment" />
+            <itemData name="Scope" defStyleNum="dsDataType" />
+            <itemData name="Operator" defStyleNum="dsOperator" />
+            <itemData name="Num" defStyleNum="dsDecVal" />
+            <itemData name="TagName" defStyleNum="dsKeyword" />
+            <itemData name="TagValue" defStyleNum="dsNormal" />
+            <itemData name="ArtistNameTag" color="#b96464" />
+            <itemData name="ArtistSortNameTag" color="#678cb1" />
+            <itemData name="SpecialTags" defStyleNum="dsDocumentation" />
+            <itemData name="SpecialName" defStyleNum="dsVerbatimString" />
+            <itemData name="Date" defStyleNum="dsConstant" />
+        </itemDatas>
+    </highlighting>
+    <general>
+        <comments>
+            <comment name="singleLine" start="#" />
+        </comments>
+        <keywords casesensitive="0" />
+    </general>
+</language>
